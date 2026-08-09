@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Engineering Executive Lab — DTAI Batch-01 (IIM Mumbai)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#16161d;--ink2:#4a4a6a;--ink3:#9090b0;
+  --gold:#c9a84c;--gold2:#f0d080;--gold3:#fffbee;
+  --sur:#ffffff;--sur2:#f7f6f3;--sur3:#efece8;--bd:#e0dbd4;
+  --org0:#1e3a5f;--org0l:#e8f0fa;--org0b:#c0d4ef;
+  --org1:#2d5a1e;--org1l:#eaf5e8;--org1b:#b8deb0;
+  --org2:#5a1e4a;--org2l:#f5e8f3;--org2b:#ddb8d8;
+  --org3:#0e5b57;--org3l:#e5f3f1;--org3b:#aeddd8;
+  --org4:#7a1f3d;--org4l:#fbe8ee;--org4b:#eec0d0;
+  --org5:#2d2f74;--org5l:#ebecf8;--org5b:#c3c5ec;
+}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--sur2);color:var(--ink);min-height:100vh}
+.shell{max-width:900px;margin:0 auto;padding-bottom:60px}
+.top-bar{background:var(--ink);padding:40px 40px 0}
+.top-eyebrow{font-size:10px;font-weight:500;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+.top-title{font-family:Georgia,serif;font-size:34px;color:#fff;line-height:1.18;margin-bottom:10px}
+.top-title em{color:var(--gold2);font-style:italic}
+.top-sub{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.65;max-width:580px;margin-bottom:24px}
+.top-chips{display:flex;gap:16px;flex-wrap:wrap;padding-bottom:28px}
+.chip{font-size:11px;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:6px}
+.chip-dot{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.download-bar{background:#2a3a5a;padding:10px 40px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.dl-label{font-size:11px;color:rgba(255,255,255,0.5);font-weight:500;letter-spacing:1px;text-transform:uppercase}
+.dl-btn{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;padding:6px 14px;border-radius:20px;border:0.5px solid rgba(201,168,76,0.5);color:var(--gold2);cursor:pointer;background:transparent;text-decoration:none;transition:all 0.2s}
+.dl-btn:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.org-switcher{background:var(--ink);border-top:0.5px solid rgba(255,255,255,0.08);padding:0 40px}
+.org-tabs{display:flex;gap:0;flex-wrap:wrap}
+.org-tab{padding:14px 20px 12px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.4);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap}
+.org-tab.active{color:#fff;border-bottom-color:var(--gold)}
+.org-hero{padding:24px 40px;display:none}
+.org-hero.active{display:block}
+.org-banner{border-radius:10px;padding:20px 24px}
+.org-banner-0{background:var(--org0l);border:0.5px solid var(--org0b)}
+.org-banner-1{background:var(--org1l);border:0.5px solid var(--org1b)}
+.org-banner-2{background:var(--org2l);border:0.5px solid var(--org2b)}
+.org-banner-3{background:var(--org3l);border:0.5px solid var(--org3b)}
+.org-banner-4{background:var(--org4l);border:0.5px solid var(--org4b)}
+.org-banner-5{background:var(--org5l);border:0.5px solid var(--org5b)}
+.org-name{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.org-name-0{color:#0c2240}.org-name-1{color:#1a3a10}.org-name-2{color:#3a0e2e}.org-name-3{color:#083d3a}.org-name-4{color:#4e0f26}.org-name-5{color:#1a1c4a}
+.org-tagline{font-family:Georgia,serif;font-size:20px;line-height:1.3;margin-bottom:8px}
+.org-tagline-0{color:var(--org0)}.org-tagline-1{color:var(--org1)}.org-tagline-2{color:var(--org2)}.org-tagline-3{color:var(--org3)}.org-tagline-4{color:var(--org4)}.org-tagline-5{color:var(--org5)}
+.org-desc{font-size:13px;color:var(--ink2);line-height:1.65}
+.org-people{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.person-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.7);border:0.5px solid rgba(0,0,0,0.1);border-radius:20px;padding:5px 12px 5px 6px}
+.person-avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
+.pa0{background:#1e3a5f;color:#b5d4f4}.pa1{background:#2d5a1e;color:#c0dd97}.pa2{background:#5a1e4a;color:#f4c0d1}.pa3{background:#0e5b57;color:#b4e6e0}.pa4{background:#7a1f3d;color:#f4c0d4}.pa5{background:#2d2f74;color:#c3c5ec}
+.person-name{font-size:11px;font-weight:500;color:var(--ink)}
+.person-role{font-size:10px;color:var(--ink3)}
+.prog-wrap{background:rgba(0,0,0,0.06);height:2px;margin:0 40px}
+.prog-bar{height:2px;background:var(--gold);transition:width 0.4s ease}
+.nav-strip{display:flex;gap:0;padding:0 40px;overflow-x:auto;scrollbar-width:none;background:var(--sur2);border-bottom:0.5px solid var(--bd)}
+.nav-strip::-webkit-scrollbar{display:none}
+.npill{font-size:11px;font-weight:500;color:var(--ink3);padding:10px 14px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.2s}
+.npill.active{color:var(--ink);border-bottom-color:var(--gold)}
+.npill:hover:not(.active){color:var(--ink2)}
+.mod{display:none;padding:32px 40px;animation:fi 0.3s ease}
+.mod.active{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.mod-label{font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.mod-title{font-family:Georgia,serif;font-size:26px;color:var(--ink);line-height:1.2;margin-bottom:8px}
+.mod-intro{font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:6px;max-width:700px}
+.tmin{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ink3);background:var(--sur3);border:0.5px solid var(--bd);border-radius:20px;padding:4px 11px;margin-bottom:20px}
+.sec-head{font-size:12px;font-weight:500;color:var(--ink);margin:24px 0 12px;display:flex;align-items:center;gap:8px}
+.sec-tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px}
+.st-blue{background:#e8f0fa;color:#1e3a5f}.st-green{background:#eaf5e8;color:#2d5a1e}
+.st-purple{background:#f0eeff;color:#3c2a7a}.st-gold{background:var(--gold3);color:#7a5c10}
+.st-teal{background:#e5f3f1;color:#0e5b57}.st-rose{background:#fbe8ee;color:#7a1f3d}.st-indigo{background:#ebecf8;color:#2d2f74}
+.ex-block{background:var(--sur);border:0.5px solid var(--bd);border-radius:10px;margin-bottom:14px;overflow:hidden}
+.ex-head{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:12px;background:var(--sur)}
+.ex-head:hover{background:var(--sur2)}
+.ex-meta{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.ex-num{width:22px;height:22px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--ink);flex-shrink:0}
+.ex-who{font-size:12px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ex-task{font-size:11px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ex-caret{font-size:14px;color:var(--ink3);transition:transform 0.2s;flex-shrink:0}
+.ex-caret.open{transform:rotate(180deg)}
+.ex-body{display:none;padding:0 16px 16px;border-top:0.5px solid var(--bd)}
+.ex-body.open{display:block}
+.ex-context{font-size:12px;color:var(--ink3);font-style:italic;padding:10px 0 8px;border-bottom:0.5px solid var(--bd);margin-bottom:10px;line-height:1.6}
+.prompt-box{background:var(--sur3);border:0.5px solid var(--bd);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:11.5px;line-height:1.85;color:var(--ink);white-space:pre-wrap;margin:10px 0;position:relative}
+.pb-label{position:absolute;top:8px;right:10px;font-size:9px;font-weight:500;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink3);font-family:system-ui}
+.why-box{background:#e8f0fa;border:0.5px solid #c0d4ef;border-radius:0 8px 8px 0;border-left:2px solid #2d5a8e;padding:10px 14px;font-size:12px;color:#1e3a5f;line-height:1.65;margin-top:4px}
+.fw-detail-panel{background:var(--ink);border-radius:10px;padding:24px 28px;margin-bottom:20px}
+.fw-dt{font-family:Georgia,serif;font-size:18px;color:#fff;margin-bottom:14px}
+.fw-row{display:grid;grid-template-columns:110px 1fr;border-top:0.5px solid rgba(255,255,255,0.07)}
+.fw-l{padding:12px 0;font-size:18px;font-family:Georgia,serif;color:var(--gold2)}
+.fw-r{padding:12px 0 12px 14px;font-size:12px;color:rgba(255,255,255,0.7);border-left:0.5px solid rgba(255,255,255,0.07);line-height:1.6}
+.fw-r strong{color:#fff;display:block;font-size:11px;font-weight:500;margin-bottom:2px}
+.cot-flow{margin:16px 0}
+.cot-row{display:flex;gap:0;position:relative}
+.cot-left{display:flex;flex-direction:column;align-items:center;width:32px;flex-shrink:0}
+.cot-circ{width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--ink)}
+.cot-ln{width:1px;background:var(--bd);flex:1;min-height:16px}
+.cot-right{flex:1;padding:2px 0 20px 14px}
+.cot-rlabel{font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-bottom:4px}
+.cot-txt{font-size:12.5px;color:var(--ink2);line-height:1.7;background:var(--sur);border:0.5px solid var(--bd);border-radius:8px;padding:10px 14px}
+.cot-txt.final{border-left:2px solid var(--gold)}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.cmp-bad{background:#fdf0f0;border:0.5px solid #f0c0c0;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:11.5px;color:#6a1a1a;line-height:1.7;white-space:pre-wrap}
+.cmp-good{background:#eaf5e8;border:0.5px solid #b0d8a8;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:11.5px;color:#1a4a10;line-height:1.7;white-space:pre-wrap}
+.cmp-lbl{font-size:10px;font-weight:500;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:6px}
+.exer-box{background:var(--gold3);border:0.5px solid #e0c870;border-radius:10px;padding:20px 24px;margin:20px 0}
+.exer-title{font-size:10px;font-weight:500;letter-spacing:2px;color:#6a4c10;text-transform:uppercase;margin-bottom:8px}
+.exer-q{font-size:13px;color:#3a2a05;line-height:1.7;margin-bottom:12px}
+.exer-ta{width:100%;background:#fff;border:0.5px solid #e0c870;border-radius:6px;padding:12px 14px;font-family:inherit;font-size:12.5px;line-height:1.7;color:var(--ink);resize:vertical;min-height:90px;outline:none}
+.hint-btn{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:11px;font-weight:500;padding:7px 16px;border-radius:20px;border:0.5px solid #c9a84c;cursor:pointer;background:var(--ink);color:var(--gold);transition:all 0.2s}
+.hint-box{background:#fff;border:0.5px solid #e0c870;border-radius:6px;padding:12px 16px;margin-top:10px;font-size:12.5px;color:var(--ink2);line-height:1.7;display:none}
+.hint-box.show{display:block}
+.fw-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.fw-card{background:var(--sur);border:0.5px solid var(--bd);border-radius:10px;padding:16px 18px;cursor:pointer;transition:all 0.2s;border-left:3px solid var(--bd)}
+.fw-card:hover,.fw-card.sel{border-left-color:var(--gold);background:var(--gold3);border-color:var(--gold)}
+.fw-acro{font-family:Georgia,serif;font-size:20px;color:var(--gold);margin-bottom:3px}
+.fw-nm{font-size:11px;font-weight:500;color:var(--ink);margin-bottom:4px}
+.fw-ds{font-size:11px;color:var(--ink3);line-height:1.5}
+.fw-expand{background:var(--ink);border-radius:10px;padding:24px 28px;margin-top:8px;display:none}
+.fw-expand.open{display:block}
+.sum-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:16px 0}
+.sum-table th{text-align:left;padding:9px 14px;background:var(--ink);color:rgba(255,255,255,0.6);font-size:10px;font-weight:500;letter-spacing:0.8px}
+.sum-table td{padding:11px 14px;border-bottom:0.5px solid var(--bd);color:var(--ink2);vertical-align:top;line-height:1.6}
+.sum-table td:first-child{font-weight:500;color:var(--ink);width:130px}
+.sum-table tr:hover td{background:var(--sur3)}
+.deep-p{background:var(--ink);border-radius:10px;padding:24px 28px;font-family:monospace;font-size:11px;line-height:1.95;color:rgba(255,255,255,0.78);margin:14px 0;white-space:pre-wrap}
+.tip-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.tip-c{background:var(--sur);border:0.5px solid var(--bd);border-radius:8px;padding:14px 16px}
+.tip-h{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px}
+.tip-b{font-size:11.5px;color:var(--ink2);line-height:1.6}
+.hl{border-radius:8px;padding:13px 17px;margin:12px 0;font-size:13px;line-height:1.65}
+.hl-i{background:#e8f0fa;border:0.5px solid #c0d4ef;color:#1e3a5f}
+.hl-w{background:#fdf0f0;border:0.5px solid #f0c0c0;color:#6a1a1a}
+.hl-s{background:#eaf5e8;border:0.5px solid #b0d8a8;color:#1a4a10}
+.nav-foot{display:flex;justify-content:space-between;align-items:center;margin-top:28px;padding-top:20px;border-top:0.5px solid var(--bd)}
+.nb{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:9px 20px;border-radius:20px;cursor:pointer;transition:all 0.2s;border:0.5px solid var(--bd);background:var(--sur);color:var(--ink)}
+.nb:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.nb.pri{background:var(--ink);color:#fff;border-color:var(--ink)}
+.nb.pri:hover{background:#2d4a7a}
+.nb-ct{font-size:11px;color:var(--ink3)}
+.fs-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.fs-box{border-radius:10px;padding:16px 18px;font-size:12.5px;font-family:monospace;line-height:1.7;white-space:pre-wrap}
+.fs-box.before{background:#fdf0f0;border:0.5px solid #f0c0c0;color:#5a1515}
+.fs-box.after{background:#eaf5e8;border:0.5px solid #b0d8a8;color:#155a25}
+.fs-label{font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;display:block;font-family:system-ui}
+.docs-box{background:var(--gold3);border:0.5px solid #e0c870;border-left:2px solid var(--gold);border-radius:0 8px 8px 0;padding:9px 13px;font-size:12px;color:#5a4410;line-height:1.6;margin-top:8px}
+.docs-box b{color:#3a2a05}
+.fs-pair.io-reveal{display:none}
+.fs-pair.io-reveal.show{display:grid}
+.ev-ta{width:100%;min-height:120px;background:#fff;border:0.5px solid var(--bd);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:12.5px;line-height:1.7;color:var(--ink);resize:vertical;outline:none}
+.ev-ta:focus{border-color:var(--gold)}
+.ev-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.ev-btn{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:8px 16px;border-radius:20px;border:0.5px solid var(--bd);background:var(--sur);color:var(--ink);cursor:pointer;transition:all 0.2s}
+.ev-btn:hover{background:var(--sur3)}
+.ev-btn.pri{background:var(--ink);color:var(--gold);border-color:var(--ink)}
+.ev-btn.pri:hover{background:#2d2d3a}
+.ev-result{margin-top:18px;display:none}
+.ev-result.show{display:block}
+.ev-topline{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:8px}
+.ev-total{font-family:Georgia,serif;font-size:14px;color:var(--ink2)}
+.ev-total b{font-size:30px;color:var(--ink);font-family:Georgia,serif;vertical-align:-2px}
+.ev-grade{font-size:12px;font-weight:600;padding:6px 15px;border-radius:20px;color:#fff}
+.ev-dim{display:grid;grid-template-columns:160px 1fr 42px;gap:12px 12px;align-items:center;padding:11px 0;border-top:0.5px solid var(--bd)}
+.ev-dim-name{font-size:12px;font-weight:600;color:var(--ink)}
+.ev-dim-q{font-size:10px;color:var(--ink3);font-weight:400;display:block;margin-top:2px;line-height:1.4}
+.ev-bar{height:8px;background:var(--sur3);border-radius:6px;overflow:hidden}
+.ev-fill{height:100%;border-radius:6px;transition:width 0.45s ease}
+.ev-sc{font-size:13px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ev-reason{grid-column:2 / 4;font-size:11px;color:var(--ink2);line-height:1.5;margin:-4px 0 0}
+.ev-diag{background:var(--gold3);border:0.5px solid #e0c870;border-radius:8px;padding:14px 16px;margin-top:16px;font-size:12.5px;color:#3a2a05;line-height:1.65}
+.ev-diag b{color:var(--ink)}
+.ev-diag p{margin:0 0 8px}
+.ev-diag p:last-child{margin-bottom:0}
+.ev-note{font-size:11px;color:var(--ink3);margin-top:12px;line-height:1.55}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="top-bar">
+  <div class="top-eyebrow">IIM Mumbai · DTAI Batch-01 · Executive Learning Lab</div>
+  <div class="top-title">Prompt Engineering<br><em>for Your Sector</em></div>
+  <div class="top-sub">Follow six organizations across this batch's domains — Higher Education, Banking, IT, Insurance, Pharma, and Healthcare — as every function learns to prompt AI with precision, using real scenarios, real roles, and real stakes.</div>
+  <div class="top-chips">
+    <div class="chip"><div class="chip-dot"></div>6 Sector Storylines</div>
+    <div class="chip"><div class="chip-dot"></div>10 Modules</div>
+    <div class="chip"><div class="chip-dot"></div>40+ Prompt Examples</div>
+    <div class="chip"><div class="chip-dot"></div>Live Exercises</div>
+  </div>
+</div>
+
+<div class="org-switcher">
+  <div class="org-tabs">
+    <div class="org-tab active" onclick="setOrg(0)">Sahyadri University</div>
+    <div class="org-tab" onclick="setOrg(1)">Meridian Bank</div>
+    <div class="org-tab" onclick="setOrg(2)">Novantis Technologies</div>
+    <div class="org-tab" onclick="setOrg(3)">Aegis Insurance</div>
+    <div class="org-tab" onclick="setOrg(4)">Zentara Pharma</div>
+    <div class="org-tab" onclick="setOrg(5)">Arogya Health</div>
+  </div>
+</div>
+
+<div class="org-hero active" id="oh0">
+  <div class="org-banner org-banner-0">
+    <div class="org-name org-name-0">Domain: Higher Education · 28,000 Students · 1,400 Faculty</div>
+    <div class="org-tagline org-tagline-0">Sahyadri University — Modernising Teaching, Examinations &amp; Administration Across a Multi-Campus Public University</div>
+    <div class="org-desc">A state-affiliated university with 4 campuses, 60 departments and a technical-education mandate. Every example shows a real Sahyadri team member using the prompt technique being taught.</div>
+    <div class="org-people">
+      <div class="person-chip"><div class="person-avatar pa0">AD</div><div><div class="person-name">Dr. Anjali Deshpande</div><div class="person-role">Vice-Chancellor</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa0">SR</div><div><div class="person-name">Sanjay Rao</div><div class="person-role">Registrar &amp; Finance Officer</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa0">MN</div><div><div class="person-name">Dr. Meera Nair</div><div class="person-role">Dean, Faculty Affairs</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa0">KS</div><div><div class="person-name">Kunal Shah</div><div class="person-role">Director, Admissions &amp; Outreach</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa0">FS</div><div><div class="person-name">Fatima Sheikh</div><div class="person-role">Controller of Examinations</div></div></div>
+    </div>
+  </div>
+</div>
+<div class="org-hero" id="oh1">
+  <div class="org-banner org-banner-1">
+    <div class="org-name org-name-1">Domain: Banking &amp; Financial Services · 12,000 Employees · 900 Branches</div>
+    <div class="org-tagline org-tagline-1">Meridian Bank — Reinventing Retail, Credit &amp; Risk with AI</div>
+    <div class="org-desc">A mid-to-large commercial bank with retail, SME and corporate lines, embedding AI across credit, risk, compliance, customer service and branch operations.</div>
+    <div class="org-people">
+      <div class="person-chip"><div class="person-avatar pa1">VM</div><div><div class="person-name">Vikram Menon</div><div class="person-role">Head of Retail Banking</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa1">RA</div><div><div class="person-name">Ritu Aggarwal</div><div class="person-role">Chief Risk Officer</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa1">AP</div><div><div class="person-name">Arjun Pillai</div><div class="person-role">Head of Credit</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa1">NK</div><div><div class="person-name">Neha Kulkarni</div><div class="person-role">Head of Marketing &amp; Digital</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa1">IQ</div><div><div class="person-name">Imran Qureshi</div><div class="person-role">Head of Compliance</div></div></div>
+    </div>
+  </div>
+</div>
+<div class="org-hero" id="oh2">
+  <div class="org-banner org-banner-2">
+    <div class="org-name org-name-2">Domain: IT &amp; Technology · 6,000 Employees · 40 Global Clients</div>
+    <div class="org-tagline org-tagline-2">Novantis Technologies — Scaling Delivery, Talent &amp; Security with AI</div>
+    <div class="org-desc">A mid-size IT services and product engineering firm running managed services and build projects for global clients, embedding AI across delivery, talent, presales and information security.</div>
+    <div class="org-people">
+      <div class="person-chip"><div class="person-avatar pa2">RG</div><div><div class="person-name">Rohan Gupta</div><div class="person-role">Chief Technology Officer</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa2">PI</div><div><div class="person-name">Priya Iyer</div><div class="person-role">VP Delivery</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa2">DR</div><div><div class="person-name">Deepak Rao</div><div class="person-role">Head of Talent Acquisition</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa2">AB</div><div><div class="person-name">Ananya Bose</div><div class="person-role">Head of Presales &amp; Solutions</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa2">KM</div><div><div class="person-name">Karan Malhotra</div><div class="person-role">CISO</div></div></div>
+    </div>
+  </div>
+</div>
+<div class="org-hero" id="oh3">
+  <div class="org-banner org-banner-3">
+    <div class="org-name org-name-3">Domain: Insurance · 9,000 Employees · 6M Policies</div>
+    <div class="org-tagline org-tagline-3">Aegis Insurance — Modernising Underwriting, Claims &amp; Advisory with AI</div>
+    <div class="org-desc">A life-and-general insurer with retail and group lines, embedding AI across underwriting, claims, distribution and customer grievance handling.</div>
+    <div class="org-people">
+      <div class="person-chip"><div class="person-avatar pa3">NV</div><div><div class="person-name">Nikhil Verma</div><div class="person-role">Head of Underwriting</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa3">SI</div><div><div class="person-name">Shalini Iyer</div><div class="person-role">Chief Actuary</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa3">RB</div><div><div class="person-name">Rahul Bose</div><div class="person-role">Head of Claims</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa3">AR</div><div><div class="person-name">Anita Rao</div><div class="person-role">Head of Distribution</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa3">FA</div><div><div class="person-name">Farhan Ali</div><div class="person-role">Head of Grievance &amp; CX</div></div></div>
+    </div>
+  </div>
+</div>
+<div class="org-hero" id="oh4">
+  <div class="org-banner org-banner-4">
+    <div class="org-name org-name-4">Domain: Pharma &amp; Life Sciences · 7,500 Employees · 4 R&amp;D Sites</div>
+    <div class="org-tagline org-tagline-4">Zentara Pharma — Accelerating R&amp;D, Regulatory &amp; Safety with AI</div>
+    <div class="org-desc">A mid-size pharmaceutical company spanning discovery, clinical development and commercial, embedding AI across research, regulatory affairs, pharmacovigilance and medical affairs.</div>
+    <div class="org-people">
+      <div class="person-chip"><div class="person-avatar pa4">KN</div><div><div class="person-name">Dr. Kavita Nair</div><div class="person-role">Chief Scientific Officer</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa4">AG</div><div><div class="person-name">Aditya Ghosh</div><div class="person-role">Head of Regulatory Affairs</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa4">DM</div><div><div class="person-name">Divya Menon</div><div class="person-role">Head of Clinical Operations</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa4">RS</div><div><div class="person-name">Rohit Sinha</div><div class="person-role">Head of Pharmacovigilance</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa4">PN</div><div><div class="person-name">Pooja Nanda</div><div class="person-role">Head of Medical Affairs</div></div></div>
+    </div>
+  </div>
+</div>
+<div class="org-hero" id="oh5">
+  <div class="org-banner org-banner-5">
+    <div class="org-name org-name-5">Domain: Healthcare · 11,000 Staff · 8 Hospitals</div>
+    <div class="org-tagline org-tagline-5">Arogya Health Network — Improving Clinical Ops, Patient Experience &amp; Access with AI</div>
+    <div class="org-desc">A multi-hospital system running tertiary and community care, embedding AI across clinical operations, nursing, patient experience and health information.</div>
+    <div class="org-people">
+      <div class="person-chip"><div class="person-avatar pa5">RN</div><div><div class="person-name">Dr. Ramesh Nair</div><div class="person-role">Chief Medical Officer</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa5">GT</div><div><div class="person-name">Grace Thomas</div><div class="person-role">Director of Nursing</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa5">VK</div><div><div class="person-name">Vivek Kulkarni</div><div class="person-role">Head of Hospital Operations</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa5">SP</div><div><div class="person-name">Sneha Pillai</div><div class="person-role">Head of Patient Experience</div></div></div>
+      <div class="person-chip"><div class="person-avatar pa5">AS</div><div><div class="person-name">Dr. Arjun Sethi</div><div class="person-role">CMIO · Health Information</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="prog-wrap"><div class="prog-bar" id="prog" style="width:10%"></div></div>
+<div class="nav-strip">
+  <div class="npill active" onclick="goMod(0)">Intro</div>
+  <div class="npill" onclick="goMod(1)">CREATE</div>
+  <div class="npill" onclick="goMod(2)">RTF</div>
+  <div class="npill" onclick="goMod(3)">Frameworks</div>
+  <div class="npill" onclick="goMod(4)">Zero-Shot</div>
+  <div class="npill" onclick="goMod(5)">Few-Shot</div>
+  <div class="npill" onclick="goMod(6)">Chain-of-Thought</div>
+  <div class="npill" onclick="goMod(7)">Deep Prompts</div>
+  <div class="npill" onclick="goMod(8)">Hands-On Lab</div>
+  <div class="npill" onclick="goMod(9)">Evaluation</div>
+</div>
+
+<!-- MODULE 0 -->
+<div class="mod active" id="m0">
+  <div class="mod-label">Introduction</div>
+  <div class="mod-title">Why Prompt Engineering is a Business Skill</div>
+  <div class="mod-intro">AI outputs are only as good as the instructions they receive. In this lab, you'll follow six organizations from this batch's domains — Sahyadri University, Meridian Bank, Novantis Technologies, Aegis Insurance, Zentara Pharma, and Arogya Health Network — whose teams are learning to prompt with precision, structure, and strategic intent.</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px">
+    <div style="background:var(--org0l);border:0.5px solid var(--org0b);border-radius:8px;padding:14px 16px"><div style="font-size:11px;font-weight:500;color:#0c2240;margin-bottom:4px">Sahyadri University</div><div style="font-size:12px;color:#1e3a5f;line-height:1.55">Higher-ed system using AI for admissions, examinations, faculty support &amp; student services</div></div>
+    <div style="background:var(--org1l);border:0.5px solid var(--org1b);border-radius:8px;padding:14px 16px"><div style="font-size:11px;font-weight:500;color:#1a3a10;margin-bottom:4px">Meridian Bank</div><div style="font-size:12px;color:#2d5a1e;line-height:1.55">Commercial bank applying AI to credit, risk, compliance, marketing &amp; customer service</div></div>
+    <div style="background:var(--org2l);border:0.5px solid var(--org2b);border-radius:8px;padding:14px 16px"><div style="font-size:11px;font-weight:500;color:#3a0e2e;margin-bottom:4px">Novantis Technologies</div><div style="font-size:12px;color:#5a1e4a;line-height:1.55">IT services firm using AI across delivery, talent, presales &amp; security</div></div>
+    <div style="background:var(--org3l);border:0.5px solid var(--org3b);border-radius:8px;padding:14px 16px"><div style="font-size:11px;font-weight:500;color:#083d3a;margin-bottom:4px">Aegis Insurance</div><div style="font-size:12px;color:#0e5b57;line-height:1.55">Insurer applying AI to underwriting, claims, distribution &amp; grievance</div></div>
+    <div style="background:var(--org4l);border:0.5px solid var(--org4b);border-radius:8px;padding:14px 16px"><div style="font-size:11px;font-weight:500;color:#4e0f26;margin-bottom:4px">Zentara Pharma</div><div style="font-size:12px;color:#7a1f3d;line-height:1.55">Pharma company using AI across R&amp;D, regulatory, safety &amp; medical affairs</div></div>
+    <div style="background:var(--org5l);border:0.5px solid var(--org5b);border-radius:8px;padding:14px 16px"><div style="font-size:11px;font-weight:500;color:#1a1c4a;margin-bottom:4px">Arogya Health Network</div><div style="font-size:12px;color:#2d2f74;line-height:1.55">Hospital system using AI for clinical ops, nursing, patient experience &amp; records</div></div>
+  </div>
+  <div class="compare-grid">
+    <div><div class="cmp-lbl" style="color:#6a1a1a">Unstructured (common)</div><div class="cmp-bad">Summarize this report.</div></div>
+    <div><div class="cmp-lbl" style="color:#1a4a10">Engineered (powerful)</div><div class="cmp-good">You are Sahyadri University's Registrar. Summarize the Q3 finance-and-operations report in 4 bullets — fee collections, grant utilisation, faculty vacancies, and one forward risk. Audience: Board of Management. Max 120 words. Flag any metric that missed target by &gt;10%.</div></div>
+  </div>
+  <div class="tip-g">
+    <div class="tip-c"><div class="tip-h">Direction</div><div class="tip-b">Prompts tell the model what role to play, what task to perform, and what constraints to observe.</div></div>
+    <div class="tip-c"><div class="tip-h">Precision</div><div class="tip-b">Vague inputs yield vague outputs. Structure produces consistent, high-quality results every time.</div></div>
+    <div class="tip-c"><div class="tip-h">Efficiency</div><div class="tip-b">The right prompt eliminates back-and-forth, saving hours across an organization each week.</div></div>
+    <div class="tip-c"><div class="tip-h">Scale</div><div class="tip-b">Prompt templates become reusable assets — shared, refined, and embedded in team workflows.</div></div>
+  </div>
+  <div class="nav-foot"><div></div><div class="nb-ct">Module 1 of 8</div><button class="nb pri" onclick="goMod(1)">Begin Lab →</button></div>
+</div>
+
+<!-- MODULE 1: CREATE -->
+<div class="mod" id="m1">
+  <div class="mod-label">Module 1 of 7</div>
+  <div class="mod-title">The CREATE Framework</div>
+  <div class="mod-intro">CREATE is a six-part framework for complex, high-stakes prompts. Character · Request · Examples · Adjustments · Type · Extras. Each component removes ambiguity and gives the model everything it needs to produce expert-grade output.</div>
+  <div class="fw-detail-panel">
+    <div class="fw-dt">C · R · E · A · T · E — Every letter explained</div>
+    <div class="fw-row"><div class="fw-l">C</div><div class="fw-r"><strong>Character / Role</strong>Who is the AI? Persona, expertise, experience level, and communication style.</div></div>
+    <div class="fw-row"><div class="fw-l">R</div><div class="fw-r"><strong>Request / Task</strong>The exact action needed. Use a verb + object + scope.</div></div>
+    <div class="fw-row"><div class="fw-l">E</div><div class="fw-r"><strong>Examples / Context</strong>Background data, reference documents, or example outputs that calibrate the response.</div></div>
+    <div class="fw-row"><div class="fw-l">A</div><div class="fw-r"><strong>Adjustments / Constraints</strong>Guardrails: word limits, excluded topics, regulatory boundaries, tone restrictions.</div></div>
+    <div class="fw-row"><div class="fw-l">T</div><div class="fw-r"><strong>Type of Output</strong>Format specification: bullet list, table, memo, JSON, slide outline, email.</div></div>
+    <div class="fw-row"><div class="fw-l">E</div><div class="fw-r"><strong>Extras / Evaluation</strong>Meta-instructions: confidence rating, flag assumptions, ask clarifying questions.</div></div>
+  </div>
+
+  <div class="sec-head">Sahyadri University — CREATE Examples <span class="sec-tag st-blue">Higher Ed</span></div>
+  <div id="ex-c-mc"></div>
+  <div class="sec-head" style="margin-top:20px">Meridian Bank — CREATE Examples <span class="sec-tag st-green">Banking</span></div>
+  <div id="ex-c-vr"></div>
+  <div class="sec-head" style="margin-top:20px">Novantis Technologies — CREATE Examples <span class="sec-tag st-purple">IT</span></div>
+  <div id="ex-c-nx"></div>
+
+  <div class="exer-box">
+    <div class="exer-title">✏ Exercise — Build a CREATE Prompt</div>
+    <div class="exer-q">Choose your organization and write a full CREATE prompt for a challenge they face. Address all 6 components explicitly.</div>
+    <textarea class="exer-ta" placeholder="C: Character / Role&#10;R: Request&#10;E: Examples / Context&#10;A: Adjustments&#10;T: Type of output&#10;E: Extras"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h1')">Reveal Model Answer</button>
+    <div class="hint-box" id="h1">C: You are Sahyadri University's Dean of Faculty Affairs with 20 years of academic administration experience.<br>R: Develop a faculty-retention strategy for engineering departments where attrition hit 18% in 2024 — 9pts above the sector norm.<br>E: Exit data: pay parity 38%, research support 29%, workload 22%. A private university hired away 22 assistant professors.<br>A: Actionable within 6 months. No options over ₹4 crore recurring cost. No blanket pay revisions (UGC-linked).<br>T: Prioritized action plan: 3 actions in 30 days, 3 in 90 days, 1 structural change at 180 days.<br>E: Rate confidence per recommendation. Flag any assumption that depends on state-government approval.</div>
+  </div>
+  <div class="nav-foot"><button class="nb" onclick="goMod(0)">← Back</button><div class="nb-ct">Module 2 of 8</div><button class="nb pri" onclick="goMod(2)">Next: RTF →</button></div>
+</div>
+
+<!-- MODULE 2: RTF -->
+<div class="mod" id="m2">
+  <div class="mod-label">Module 2 of 7</div>
+  <div class="mod-title">The RTF Framework</div>
+  <div class="mod-intro">RTF is the executive's speed formula: Role · Task · Format. Use it for everyday professional tasks where you need a quality output fast.</div>
+  <div class="fw-detail-panel">
+    <div class="fw-dt">R · T · F — The 60-second professional prompt</div>
+    <div class="fw-row"><div class="fw-l">R</div><div class="fw-r"><strong>Role</strong>Act as a [title] with expertise in [domain]. Sets the knowledge base and voice.</div></div>
+    <div class="fw-row"><div class="fw-l">T</div><div class="fw-r"><strong>Task</strong>Draft / Analyze / Create / Summarize [specific thing] given [context]. Be precise.</div></div>
+    <div class="fw-row"><div class="fw-l">F</div><div class="fw-r"><strong>Format</strong>Return as [structure] with [sections/length]. Define what you want to read.</div></div>
+  </div>
+  <div class="sec-head">Sahyadri University — RTF Examples <span class="sec-tag st-blue">Higher Ed</span></div>
+  <div id="ex-r-mc"></div>
+  <div class="sec-head" style="margin-top:20px">Meridian Bank — RTF Examples <span class="sec-tag st-green">Banking</span></div>
+  <div id="ex-r-vr"></div>
+  <div class="sec-head" style="margin-top:20px">Novantis Technologies — RTF Examples <span class="sec-tag st-purple">IT</span></div>
+  <div id="ex-r-nx"></div>
+  <div class="hl hl-i">RTF vs CREATE: Use RTF for routine, time-pressured tasks. Switch to CREATE when the task has multiple dimensions, high stakes, or needs precise calibration.</div>
+  <div class="exer-box">
+    <div class="exer-title">✏ Exercise — RTF in 90 Seconds</div>
+    <div class="exer-q">Meridian's Head of Marketing &amp; Digital Neha Kulkarni needs talking points for a press call about a viral thread alleging a mobile-app outage blocked salary-day withdrawals. Write her RTF prompt.</div>
+    <textarea class="exer-ta" placeholder="R: Role — T: Task — F: Format"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h2')">Reveal Model Answer</button>
+    <div class="hint-box" id="h2">R: Act as a senior corporate-communications strategist specializing in banking crisis communications and RBI-sensitive disclosures.<br><br>T: Prepare talking points for Neha Kulkarni, Meridian Bank's Head of Marketing &amp; Digital, speaking to a journalist about a viral thread claiming the app outage blocked salary-day withdrawals. Bank's position: root cause identified and fixed, no funds lost, affected customers being contacted, branch and ATM channels stayed live.<br><br>F: 5 talking points, each 2 sentences. Open with acknowledgement, end with a forward commitment. Avoid speculation on numbers not yet confirmed. Avoid the word "glitch" — use "service disruption."</div>
+  </div>
+  <div class="nav-foot"><button class="nb" onclick="goMod(1)">← Back</button><div class="nb-ct">Module 3 of 8</div><button class="nb pri" onclick="goMod(3)">Next: Frameworks →</button></div>
+</div>
+
+<!-- MODULE 3: ALL FRAMEWORKS -->
+<div class="mod" id="m3">
+  <div class="mod-label">Module 3 of 7</div>
+  <div class="mod-title">All Prompt Frameworks</div>
+  <div class="mod-intro">Beyond CREATE and RTF, specialized frameworks serve different output types. Click any to explore its structure.</div>
+  <div class="fw-grid">
+    <div class="fw-card" id="fwc0" onclick="toggleFW(0)"><div class="fw-acro">RISEN</div><div class="fw-nm">Role · Instructions · Steps · End Goal · Narrowing</div><div class="fw-ds">Best for: step-by-step workflows, SOPs, process documentation</div></div>
+    <div class="fw-card" id="fwc1" onclick="toggleFW(1)"><div class="fw-acro">COSTAR</div><div class="fw-nm">Context · Objective · Style · Tone · Audience · Response</div><div class="fw-ds">Best for: brand content, marketing, internal communications</div></div>
+    <div class="fw-card" id="fwc2" onclick="toggleFW(2)"><div class="fw-acro">TRACE</div><div class="fw-nm">Task · Role · Audience · Constraints · Examples</div><div class="fw-ds">Best for: training materials, audience-specific deliverables</div></div>
+    <div class="fw-card" id="fwc3" onclick="toggleFW(3)"><div class="fw-acro">PARA</div><div class="fw-nm">Problem · Action · Result · Ask</div><div class="fw-ds">Best for: consulting asks, problem-solving, advisory prompts</div></div>
+  </div>
+  <div class="fw-expand" id="fwpanel"><div id="fwcontent"></div></div>
+  <div class="sec-head" style="margin-top:20px">Framework selection guide <span class="sec-tag st-gold">Reference</span></div>
+  <table class="sum-table">
+    <thead><tr><th>Framework</th><th>Best Use Case</th><th>Org Example</th></tr></thead>
+    <tbody>
+      <tr><td>RTF</td><td>Quick professional tasks, emails, summaries</td><td>Meridian's Neha drafting a campaign post</td></tr>
+      <tr><td>CREATE</td><td>Complex, multi-dimensional, high-stakes</td><td>Sahyadri's Anjali on faculty-retention strategy</td></tr>
+      <tr><td>RISEN</td><td>Process workflows, SOPs, step-by-step plans</td><td>Meridian's Imran on KYC/AML audit procedures</td></tr>
+      <tr><td>COSTAR</td><td>Brand voice, content, marketing materials</td><td>Meridian's Neha on a savings-campaign message</td></tr>
+      <tr><td>TRACE</td><td>Training materials, onboarding docs</td><td>Novantis' Deepak on a fresher onboarding guide</td></tr>
+      <tr><td>PARA</td><td>Problem-solving, advisory, consulting asks</td><td>Novantis' Priya on a delivery-turnaround for an account</td></tr>
+    </tbody>
+  </table>
+  <div class="exer-box">
+    <div class="exer-title">✏ Exercise — Pick the Right Framework</div>
+    <div class="exer-q">Meridian Bank's Imran Qureshi needs a step-by-step KYC re-verification checklist for high-risk customer accounts. Which framework fits best? Write the prompt using that framework.</div>
+    <textarea class="exer-ta" placeholder="Identify the framework and write the prompt…"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h3')">Reveal Model Answer</button>
+    <div class="hint-box" id="h3">Best framework: RISEN (step-by-step process task).<br><br>R: Act as a senior compliance officer at a commercial bank, expert in RBI KYC Master Directions and PMLA.<br>I: Create a periodic KYC re-verification checklist for high-risk (enhanced due diligence) customer accounts.<br>S: Step 1 — Risk re-classification review. Step 2 — Re-collect and validate identity/address proofs. Step 3 — Beneficial-ownership refresh for entities. Step 4 — PEP/sanctions re-screening. Step 5 — Update the customer risk profile in CBS. Step 6 — Branch-head sign-off within 30 days.<br>E: A one-page checklist a branch operations manager can self-execute during the review cycle.<br>N: Limit to individual and proprietorship accounts. Exclude correspondent-banking KYC.</div>
+  </div>
+  <div class="nav-foot"><button class="nb" onclick="goMod(2)">← Back</button><div class="nb-ct">Module 4 of 8</div><button class="nb pri" onclick="goMod(4)">Next: Zero-Shot →</button></div>
+</div>
+
+<!-- MODULE 4: ZERO SHOT -->
+<div class="mod" id="m4">
+  <div class="mod-label">Module 4 of 7</div>
+  <div class="mod-title">Zero-Shot Prompting</div>
+  <div class="mod-intro">Zero-shot prompts give no examples — the model relies entirely on its training. They work for well-defined, common tasks. The key is being specific about task, constraints, and format.</div>
+  <div class="sec-head">Sahyadri University — Zero-Shot Examples <span class="sec-tag st-blue">Higher Ed</span></div>
+  <div id="ex-z-mc"></div>
+  <div class="sec-head" style="margin-top:20px">Meridian Bank — Zero-Shot Examples <span class="sec-tag st-green">Banking</span></div>
+  <div id="ex-z-vr"></div>
+  <div class="sec-head" style="margin-top:20px">Novantis Technologies — Zero-Shot Examples <span class="sec-tag st-purple">IT</span></div>
+  <div id="ex-z-nx"></div>
+  <div class="compare-grid" style="margin-top:16px">
+    <div><div class="cmp-lbl" style="color:#6a1a1a">Weak zero-shot</div><div class="cmp-bad">Review this contract.</div></div>
+    <div><div class="cmp-lbl" style="color:#1a4a10">Strong zero-shot</div><div class="cmp-good">You are a technology-contracts lawyer specializing in IT master service agreements. Review this MSA and list every clause that creates liability or SLA-penalty risk for Novantis. Format: numbered list sorted by severity (High/Med/Low). For each: cite the clause, name the risk type. [PASTE CONTRACT]</div></div>
+  </div>
+  <div class="hl hl-w">Zero-shot struggles with highly specialized formatting or niche domain calibration. When output is inconsistent — add few-shot examples.</div>
+  <div class="exer-box">
+    <div class="exer-title">✏ Exercise — Zero-Shot Prompt</div>
+    <div class="exer-q">Sahyadri's Controller of Examinations Fatima Sheikh needs to draft a circular to all department heads on the revised end-semester exam and evaluation timeline. Write a precise zero-shot prompt — no examples.</div>
+    <textarea class="exer-ta" placeholder="Write your zero-shot prompt. Be specific about role, task, context, constraints, and output format…"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h4')">Reveal Model Answer</button>
+    <div class="hint-box" id="h4">You are an experienced university examinations administrator. Draft an official circular to all department heads on behalf of Fatima Sheikh, Controller of Examinations, Sahyadri University.<br><br>Context: End-semester exams moved earlier by 8 days due to the election-duty calendar. Answer-script evaluation window compressed from 15 to 11 days. Result-declaration deadline unchanged. Central assessment at 3 camps.<br><br>Constraints: Formal, unambiguous, no blame language. Every date must be a placeholder in [DD-MMM] form for me to fill. Max 250 words.<br><br>Format: Reference-and-date header, subject line, 4 numbered instructions, a table of key dates, and a sign-off block.</div>
+  </div>
+  <div class="nav-foot"><button class="nb" onclick="goMod(3)">← Back</button><div class="nb-ct">Module 5 of 8</div><button class="nb pri" onclick="goMod(5)">Next: Few-Shot →</button></div>
+</div>
+
+<!-- MODULE 5: FEW SHOT -->
+<div class="mod" id="m5">
+  <div class="mod-label">Module 5 of 7</div>
+  <div class="mod-title">Few-Shot Prompting</div>
+  <div class="mod-intro">Few-shot prompting provides 2–5 input-output examples before the actual task. Examples teach format, tone, reasoning style, and domain vocabulary — showing the model exactly what you expect.</div>
+  <div class="sec-head">Sahyadri University — Few-Shot Examples <span class="sec-tag st-blue">Higher Ed</span></div>
+  <div id="ex-f-mc"></div>
+  <div class="sec-head" style="margin-top:20px">Meridian Bank — Few-Shot Examples <span class="sec-tag st-green">Banking</span></div>
+  <div id="ex-f-vr"></div>
+  <div class="sec-head" style="margin-top:20px">Novantis Technologies — Few-Shot Examples <span class="sec-tag st-purple">IT</span></div>
+  <div id="ex-f-nx"></div>
+  <div class="hl hl-i">Pro tip: Two excellent, diverse examples outperform five mediocre ones. Choose examples that represent edge cases and variation — not just the easy, obvious cases.</div>
+  <div class="exer-box">
+    <div class="exer-title">✏ Exercise — Few-Shot Prompt</div>
+    <div class="exer-q">Novantis' Head of Presales Ananya Bose wants the model to write client case-study blurbs in the firm's voice — outcome-first, metric-led, no jargon. Write a 2-shot prompt, then ask for a blurb on a cloud-migration project.</div>
+    <textarea class="exer-ta" placeholder="Example 1: Project + Blurb&#10;Example 2: Project + Blurb&#10;Now write: Cloud-migration blurb…" style="min-height:130px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h5')">Reveal Model Answer</button>
+    <div class="hint-box" id="h5">Write Novantis client case-study blurbs matching our exact voice.<br><br>Example 1 — Payments client, fraud-detection revamp:<br>"We cut false-positive fraud alerts by 41% for a top-5 payments client — freeing 30 analyst-hours a week and letting genuine transactions clear in real time. Nine months, one re-architected pipeline, zero downtime."<br><br>Example 2 — Retailer, order-management modernisation:<br>"A national retailer's order system buckled every festival season. We replaced it with an event-driven platform that held firm through a 5x Diwali peak — and shipped 22% faster the rest of the year."<br><br>Rules: Lead with the outcome and a number. One sentence on how. No words like "leverage," "synergy," or "cutting-edge." Under 55 words.<br><br>Now write for: Cloud migration — a mid-size insurer moved 40 legacy apps from on-prem to AWS, 18-month programme, 30% infra-cost reduction, no unplanned outage.</div>
+  </div>
+  <div class="nav-foot"><button class="nb" onclick="goMod(4)">← Back</button><div class="nb-ct">Module 6 of 8</div><button class="nb pri" onclick="goMod(6)">Next: Chain-of-Thought →</button></div>
+</div>
+
+<!-- MODULE 6: COT -->
+<div class="mod" id="m6">
+  <div class="mod-label">Module 6 of 7</div>
+  <div class="mod-title">Chain-of-Thought Prompting</div>
+  <div class="mod-intro">CoT prompts ask the model to show its reasoning step-by-step before giving a final answer. This dramatically improves accuracy on complex reasoning and strategic decisions.</div>
+  <div class="sec-head">Sahyadri — CoT in action: exam-hall shortage <span class="sec-tag st-blue">Higher Ed</span></div>
+  <div class="cot-flow">
+    <div class="cot-row"><div class="cot-left"><div class="cot-circ">P</div><div class="cot-ln"></div></div><div class="cot-right"><div class="cot-rlabel">Prompt (Fatima Sheikh, Controller of Examinations)</div><div class="cot-txt">Two exam halls at North Campus are unavailable this week after a ceiling leak. 1,900 students are scheduled across those halls for end-semester papers. Think through this situation step by step before recommending an action plan.</div></div></div>
+    <div class="cot-row"><div class="cot-left"><div class="cot-circ">1</div><div class="cot-ln"></div></div><div class="cot-right"><div class="cot-rlabel">Step 1 — Assess the hard constraint</div><div class="cot-txt">1,900 seats lost against a fixed exam calendar. University ordinances forbid rescheduling a paper for one cohort only, so any fix must preserve a common slot and per-candidate seating norms (1 seat/bench).</div></div></div>
+    <div class="cot-row"><div class="cot-left"><div class="cot-circ">2</div><div class="cot-ln"></div></div><div class="cot-right"><div class="cot-rlabel">Step 2 — Identify available capacity</div><div class="cot-txt">Options: (a) two central-block seminar halls (~600 seats), (b) the library reading hall (~300, needs invigilators), (c) South Campus halls (400 seats but 9 km away), (d) a second sitting in the afternoon for the same paper (question-paper security risk).</div></div></div>
+    <div class="cot-row"><div class="cot-left"><div class="cot-circ">3</div><div class="cot-ln"></div></div><div class="cot-right"><div class="cot-rlabel">Step 3 — Evaluate constraints</div><div class="cot-txt">A second sitting risks paper leakage and violates the single-slot ordinance. South Campus transfer needs transport and a fresh invigilation roster. Seminar + library halls together (~900) still leave a 1,000-seat gap.</div></div></div>
+    <div class="cot-row"><div class="cot-left"><div class="cot-circ">✓</div></div><div class="cot-right"><div class="cot-rlabel">Recommendation</div><div class="cot-txt final">Immediate: (1) Convert central seminar + library halls (~900 seats). (2) Move the remaining ~1,000 students to South Campus with two shuttle rounds and a borrowed invigilation team. (3) Keep a single morning slot — no second sitting. Escalate to the VC only if invigilator availability falls short.</div></div></div>
+  </div>
+  <div class="sec-head">CoT examples across organizations <span class="sec-tag st-gold">All Domains</span></div>
+  <div id="ex-cot-all"></div>
+  <div class="tip-g">
+    <div class="tip-c"><div class="tip-h">"Think step by step"</div><div class="tip-b">The classic CoT trigger. Simple, highly effective.</div></div>
+    <div class="tip-c"><div class="tip-h">"Before answering, list your assumptions"</div><div class="tip-b">Forces explicit assumption identification — critical for ambiguous situations.</div></div>
+    <div class="tip-c"><div class="tip-h">"Walk me through your reasoning"</div><div class="tip-b">Produces narrative-style chains — good for executive communication.</div></div>
+    <div class="tip-c"><div class="tip-h">"Show your work, then conclude"</div><div class="tip-b">Separates analysis from recommendation — ideal when reasoning IS the value.</div></div>
+  </div>
+  <div class="exer-box">
+    <div class="exer-title">✏ Exercise — Chain-of-Thought</div>
+    <div class="exer-q">Meridian Bank's Chief Risk Officer Ritu Aggarwal must decide whether to expand unsecured personal-loan lending by ₹500 crore in a rising-delinquency environment. Write a CoT prompt that makes the model reason through this systematically.</div>
+    <textarea class="exer-ta" placeholder="Include a CoT trigger. Structure the prompt so the model reasons through each dimension before reaching a conclusion…"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h6')">Reveal Model Answer</button>
+    <div class="hint-box" id="h6">You are a senior bank risk strategist. Before giving any recommendation, think through this decision step by step.<br><br>Step 1: Quantify current portfolio stress — 30/90-day delinquency trend, vintage curves on the last 4 quarters.<br>Step 2: Evaluate what ₹500 crore of new unsecured lending adds in expected loss at current underwriting cut-offs.<br>Step 3: Examine the do-nothing scenario — NIM pressure, competitive share loss, fixed-cost absorption.<br>Step 4: Assess portfolio quality levers — score cut-off, bureau triggers, income verification, ticket-size caps.<br>Step 5: Model capital and provisioning impact against RBI norms and the bank's risk appetite.<br><br>Context: Unsecured book ₹4,200 cr, GNPA 2.1% rising, 90+ DPD up 40 bps QoQ, approval rate 46%, blended yield 15.8%.<br><br>Only after completing all steps: Expand fully / Expand with tighter cut-offs / Hold + the top 3 reasons + the single assumption that reverses your answer.</div>
+  </div>
+  <div class="nav-foot"><button class="nb" onclick="goMod(5)">← Back</button><div class="nb-ct">Module 7 of 8</div><button class="nb pri" onclick="goMod(7)">Next: Deep Prompts →</button></div>
+</div>
+
+<!-- MODULE 7: DEEP PROMPTS -->
+<div class="mod" id="m7">
+  <div class="mod-label">Module 7 of 7</div>
+  <div class="mod-title">Detailed Long-Form Prompts</div>
+  <div class="mod-intro">For mission-critical work — board decks, strategic plans, contract reviews, transformation roadmaps — long-form prompts combine frameworks, rich context, explicit constraints, and output schemas.</div>
+  <div class="sec-head">Novantis — Full long-form prompt: AI-delivery transformation roadmap <span class="sec-tag st-purple">IT</span></div>
+  <div class="deep-p"><span style="color:rgba(255,255,255,0.35);font-style:italic"># ROLE</span>
+<span style="color:var(--gold2)">CHARACTER:</span> <span style="color:rgba(255,255,255,0.92)">You are a Principal-level technology transformation consultant, ex-Big-4 digital practice. You have led AI-in-SDLC rollouts for 8 IT services firms and advised on secure, compliant developer tooling.</span>
+
+<span style="color:rgba(255,255,255,0.35);font-style:italic"># TASK</span>
+<span style="color:var(--gold2)">REQUEST:</span> <span style="color:rgba(255,255,255,0.92)">Create a 3-year roadmap for Novantis Technologies to embed AI across the delivery lifecycle — from a few pilot teams to firm-wide, governed adoption.</span>
+
+<span style="color:rgba(255,255,255,0.35);font-style:italic"># CONTEXT</span>
+<span style="color:var(--gold2)">CONTEXT:</span> <span style="color:rgba(255,255,255,0.92)">- 6,000 staff, 40 global clients, ~3,800 engineers.
+- Current: ad-hoc use of AI coding assistants; no governance, no measured impact.
+- 28% of engineer time goes to boilerplate, tests and documentation.
+- Goal: 20% delivery-productivity gain with no rise in defect-escape rate.
+- Budget: 3-year programme; 10 internal enablement engineers available.</span>
+
+<span style="color:rgba(255,255,255,0.35);font-style:italic"># CONSTRAINTS</span>
+<span style="color:var(--gold2)">ADJUSTMENTS:</span> <span style="color:rgba(255,255,255,0.92)">- Must satisfy client data-residency and IP clauses in every MSA.
+- No client code may leave approved environments.
+- SOC 2 Type II and ISO 27001 posture preserved throughout.
+- Prioritize engineer experience and code quality over raw speed.</span>
+
+<span style="color:rgba(255,255,255,0.35);font-style:italic"># OUTPUT</span>
+<span style="color:var(--gold2)">TYPE:</span> <span style="color:rgba(255,255,255,0.92)">Section 1: Executive summary (150 words)
+Section 2: Current-state gap analysis (table)
+Section 3: 3-phase roadmap — Year 1 / Year 2 / Year 3
+Section 4: Governance, security and IP-guardrail model
+Section 5: KPIs — baseline, Year 1 target, Year 3 target</span>
+
+<span style="color:rgba(255,255,255,0.35);font-style:italic"># META</span>
+<span style="color:var(--gold2)">EXTRAS:</span> <span style="color:rgba(255,255,255,0.92)">- Flag every assumption with [ASSUMPTION]
+- If recommending a tool category, name 2 specific options
+- Rate overall risk: Low / Medium / High with justification
+- End with 3 questions you'd ask the Novantis CISO before finalizing</span></div>
+
+  <div style="background:var(--ink);border-radius:10px;padding:24px 28px;margin-top:20px">
+    <div style="font-family:Georgia,serif;font-size:18px;color:#fff;margin-bottom:14px">Lab Complete — Key Takeaways</div>
+    <table class="sum-table" style="font-size:12px">
+      <thead><tr><th>Technique</th><th>Use When</th><th>Seen At</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--gold2)">CREATE</td><td style="color:rgba(255,255,255,0.7)">Complex, multi-dimensional, high-stakes tasks</td><td style="color:rgba(255,255,255,0.5)">Sahyadri VC, Meridian CRO</td></tr>
+        <tr><td style="color:var(--gold2)">RTF</td><td style="color:rgba(255,255,255,0.7)">Everyday professional tasks needing speed</td><td style="color:rgba(255,255,255,0.5)">All 3 orgs, all functions</td></tr>
+        <tr><td style="color:var(--gold2)">RISEN/COSTAR/TRACE/PARA</td><td style="color:rgba(255,255,255,0.7)">Match framework to output type</td><td style="color:rgba(255,255,255,0.5)">Meridian Compliance, Novantis Talent</td></tr>
+        <tr><td style="color:var(--gold2)">Zero-Shot</td><td style="color:rgba(255,255,255,0.7)">Well-defined common tasks, fast turnarounds</td><td style="color:rgba(255,255,255,0.5)">Sahyadri Exams, Meridian Retail</td></tr>
+        <tr><td style="color:var(--gold2)">Few-Shot</td><td style="color:rgba(255,255,255,0.7)">Style calibration, classification, tone matching</td><td style="color:rgba(255,255,255,0.5)">Novantis Presales, Sahyadri Outreach</td></tr>
+        <tr><td style="color:var(--gold2)">Chain-of-Thought</td><td style="color:rgba(255,255,255,0.7)">Complex decisions requiring transparent reasoning</td><td style="color:rgba(255,255,255,0.5)">Meridian risk calls, Sahyadri Ops</td></tr>
+        <tr><td style="color:var(--gold2)">Long-Form</td><td style="color:rgba(255,255,255,0.7)">Mission-critical deliverables, board materials</td><td style="color:rgba(255,255,255,0.5)">All 3 orgs at leadership level</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="nav-foot"><button class="nb" onclick="goMod(6)">← Back</button><div class="nb-ct">Module 9 of 9</div><button class="nb pri" onclick="goMod(8)">Next: Hands-On Lab →</button></div>
+</div>
+
+<!-- MODULE 8: HANDS-ON WORKSHOP -->
+<div class="mod" id="m8">
+  <div class="mod-label">Module 8 · Hands-On</div>
+  <div class="mod-title">Frameworks vs Unstructured — Try It Yourself</div>
+  <div class="mod-intro">Eight activities across the six sectors, built on the frameworks from this lab. For each: read the scenario, follow the step-by-step build, write your own framework prompt, reveal the model answer — then compare the output a framework gives you against the output the lazy one-line prompt gives you.</div>
+  <div class="hl hl-i"><b>How each activity works.</b> (1) Read the scenario. (2) See the one-line prompt most people type. (3) Follow the numbered recipe to build the framework version. (4) Write your own in the box. (5) Reveal the model answer. (6) Reveal the two outputs and compare them side by side — that gap is the whole point.<br><br><b>A note on the outputs.</b> The two outputs shown in each activity are <b>illustrative</b> — representative of what each prompt style tends to produce, not captured from a live model run. For the real thing, paste both your prompts into your AI tool and compare what comes back.</div>
+
+  <!-- ACTIVITY 1 — SAHYADRI · CREATE -->
+  <div class="sec-head">Activity 1 · Sahyadri University <span class="sec-tag st-blue">Higher Ed · CREATE</span></div>
+  <div class="hl hl-s"><b>Scenario.</b> First-year dropout at Sahyadri has hit 15%. Dean of Faculty Affairs Dr. Meera Nair wants an AI-drafted intervention plan she can take to the Board — not a generic listicle.</div>
+  <div class="compare-grid">
+    <div><div class="cmp-lbl" style="color:#6a1a1a">What most people type</div><div class="cmp-bad">Write a plan to reduce student dropouts.</div></div>
+    <div><div class="cmp-lbl" style="color:#1a4a10">Your mission</div><div class="cmp-good">Rebuild the same ask as a full CREATE prompt using the 6 steps below. Then reveal the model answer and compare outputs.</div></div>
+  </div>
+  <div class="fw-detail-panel">
+    <div class="fw-dt">Step-by-step — build the CREATE prompt</div>
+    <div class="fw-row"><div class="fw-l">C</div><div class="fw-r"><strong>Step 1 · Character</strong>Give it a role: an academic-affairs dean with 15 years in student retention at a multi-campus university.</div></div>
+    <div class="fw-row"><div class="fw-l">R</div><div class="fw-r"><strong>Step 2 · Request</strong>State the exact task and scope: design a first-year dropout-reduction plan across all 4 campuses.</div></div>
+    <div class="fw-row"><div class="fw-l">E</div><div class="fw-r"><strong>Step 3 · Examples / Context</strong>Feed the real data: 3,000 first-years, dropout 15%; drivers — financial 40%, academic struggle 30%, low belonging 20%.</div></div>
+    <div class="fw-row"><div class="fw-l">A</div><div class="fw-r"><strong>Step 4 · Adjustments</strong>Add guardrails: deliver within 2 terms; no fee waivers beyond the existing scholarship budget; must work on every campus.</div></div>
+    <div class="fw-row"><div class="fw-l">T</div><div class="fw-r"><strong>Step 5 · Type of output</strong>Specify format: a prioritized plan — 3 quick wins (30 days), 3 medium (one term), 1 structural change — each with an owner.</div></div>
+    <div class="fw-row"><div class="fw-l">E</div><div class="fw-r"><strong>Step 6 · Extras</strong>Add meta-instructions: rate confidence per action and flag any assumption that needs Board approval.</div></div>
+  </div>
+  <div class="exer-box">
+    <div class="exer-title">✏ Write your CREATE prompt</div>
+    <div class="exer-q">Using the 6 steps above, write the full prompt for Dr. Nair. Address every letter explicitly.</div>
+    <textarea class="exer-ta" placeholder="C: Character / Role&#10;R: Request&#10;E: Examples / Context&#10;A: Adjustments&#10;T: Type of output&#10;E: Extras" style="min-height:130px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h7')">Reveal Model Answer</button>
+    <div class="hint-box" id="h7">C: You are an academic-affairs dean with 15 years of experience reducing first-year attrition at multi-campus universities.<br>R: Design a first-year dropout-reduction plan for Sahyadri University, deployable across all 4 campuses.<br>E: 3,000 first-years; dropout 15%. Exit drivers: financial 40%, academic struggle 30%, low sense of belonging 20%.<br>A: Deliverable within 2 terms. No fee waivers beyond the existing scholarship budget. Every action must work on all 4 campuses.<br>T: Prioritized plan — 3 quick wins (30 days), 3 medium (one term), 1 structural change — each with a named owner and a metric.<br>E: Rate confidence per action (High/Med/Low). Flag any assumption that needs Board of Management approval with [ASSUMPTION].</div>
+  </div>
+    <div class="exer-box" style="background:var(--sur);border-color:var(--bd)">
+    <div class="exer-title" style="color:#6a4c10">📎 Now think: what would you attach?</div>
+    <div class="exer-q" style="color:var(--ink2)">A great prompt still needs the right inputs. List the supporting documents or the data access you’d give the model to make this a strong, grounded case — not something it has to invent.</div>
+    <textarea class="exer-ta" placeholder="e.g. dropout data by cause, the scholarship budget, the academic calendar…" style="min-height:80px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('da1')">Show suggested attachments</button>
+    <div class="hint-box" id="da1"><b>Illustrative attachments:</b> the first-year dropout data by campus and cause, the current scholarship budget and rules, the academic-calendar constraints, and the existing attendance / mentoring system data.</div>
+  </div>
+
+  <div class="sec-head">The difference in output <span class="sec-tag st-gold">Illustrative outputs</span></div>
+  <button class="hint-btn" onclick="toggleHint('io1')">Show illustrative output as per model answer</button>
+  <div class="fs-pair io-reveal" id="io1">
+    <div class="fs-box before"><span class="fs-label">Output from the one-line prompt</span>Ways to reduce student dropouts:
+1. Improve communication with students.
+2. Offer counselling and mentorship.
+3. Provide financial support where possible.
+4. Make classes more engaging.
+5. Track attendance and follow up.
+
+A supportive environment helps students stay motivated and succeed.</div>
+    <div class="fs-box after"><span class="fs-label">Output from the CREATE prompt</span>First-Year Retention Plan · Sahyadri (confidence: Med-High)
+
+QUICK WINS (30 days)
+1. Auto "at-risk" flag after 3 missed classes or 2 failed quizzes → routes to mentor. [Owner: Dean, Academics]
+2. One fee-help desk per campus; financial cases (40% of exits) answered same week, within scholarship budget. [Owner: Registrar]
+3. Peer-buddy pairing in week 1 to build belonging (20%). [Owner: Student Affairs]
+
+THIS TERM
+4. Bridge tutorials for the 2 highest-failure gateway courses (academic struggle = 30%).
+
+STRUCTURAL
+7. First-year success office [ASSUMPTION: needs Board budget line].
+
+KPIs: dropout 15%→10% in 2 terms; at-risk flags actioned in &lt;5 days.</div>
+  </div>
+
+  <!-- ACTIVITY 2 — MERIDIAN · RISEN -->
+  <div class="sec-head" style="margin-top:26px">Activity 2 · Meridian Bank <span class="sec-tag st-green">Banking · RISEN</span></div>
+  <div class="hl hl-s"><b>Scenario.</b> Branches handle reported phishing / UPI fraud inconsistently. Head of Compliance Imran Qureshi wants one clean SOP a branch officer can follow without calling head office.</div>
+  <div class="compare-grid">
+    <div><div class="cmp-lbl" style="color:#6a1a1a">What most people type</div><div class="cmp-bad">How should branches handle fraud complaints?</div></div>
+    <div><div class="cmp-lbl" style="color:#1a4a10">Your mission</div><div class="cmp-good">Turn this into a RISEN prompt so the model returns a usable step-by-step SOP — not general advice.</div></div>
+  </div>
+  <div class="fw-detail-panel">
+    <div class="fw-dt">Step-by-step — build the RISEN prompt</div>
+    <div class="fw-row"><div class="fw-l">R</div><div class="fw-r"><strong>Step 1 · Role</strong>Set expertise: a bank compliance officer fluent in RBI fraud-reporting and customer-grievance norms.</div></div>
+    <div class="fw-row"><div class="fw-l">I</div><div class="fw-r"><strong>Step 2 · Instructions</strong>Name the deliverable: a branch SOP for a customer reporting phishing / UPI fraud.</div></div>
+    <div class="fw-row"><div class="fw-l">S</div><div class="fw-r"><strong>Step 3 · Steps</strong>Lay out the sequence you expect: reassure &amp; record → contain the account → report on the portal within the window → escalate → close the loop with a reference and TAT.</div></div>
+    <div class="fw-row"><div class="fw-l">E</div><div class="fw-r"><strong>Step 4 · End Goal</strong>Define done: a one-page SOP a branch officer can execute unaided.</div></div>
+    <div class="fw-row"><div class="fw-l">N</div><div class="fw-r"><strong>Step 5 · Narrowing</strong>Bound it: retail customers only; exclude corporate/CMS fraud and card-network chargebacks.</div></div>
+  </div>
+  <div class="exer-box">
+    <div class="exer-title">✏ Write your RISEN prompt</div>
+    <div class="exer-q">Write the full RISEN prompt for Imran. Make the Steps explicit — that is what turns advice into an SOP.</div>
+    <textarea class="exer-ta" placeholder="R: Role&#10;I: Instructions&#10;S: Steps&#10;E: End Goal&#10;N: Narrowing" style="min-height:130px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h8')">Reveal Model Answer</button>
+    <div class="hint-box" id="h8">R: Act as a bank compliance officer with expertise in RBI fraud-reporting timelines and customer-grievance redressal.<br>I: Create a branch SOP for handling a customer who reports phishing or UPI fraud.<br>S: Step 1 — Reassure and record (customer ID, transaction IDs, time, channel); never ask for OTP/PIN. Step 2 — Contain: flag the account for enhanced monitoring and block the compromised instrument. Step 3 — Report on the fraud-reporting portal within the mandated window and capture the acknowledgement number. Step 4 — Escalate to the nodal officer above the loss threshold. Step 5 — Close the loop: give the customer the complaint reference and expected TAT, and log it.<br>E: A one-page SOP a branch officer can follow without calling head office.<br>N: Retail customers only. Exclude corporate/CMS fraud and card-network chargebacks.</div>
+  </div>
+    <div class="exer-box" style="background:var(--sur);border-color:var(--bd)">
+    <div class="exer-title" style="color:#6a4c10">📎 Now think: what would you attach?</div>
+    <div class="exer-q" style="color:var(--ink2)">A great prompt still needs the right inputs. List the supporting documents or the data access you’d give the model to make this a strong, grounded case — not something it has to invent.</div>
+    <textarea class="exer-ta" placeholder="e.g. the RBI reporting timelines, the current grievance SOP, comms templates…" style="min-height:80px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('da2')">Show suggested attachments</button>
+    <div class="hint-box" id="da2"><b>Illustrative attachments:</b> the RBI fraud-reporting timelines, the existing branch grievance SOP, the account-blocking system steps, and the customer-communication templates.</div>
+  </div>
+
+  <div class="sec-head">The difference in output <span class="sec-tag st-gold">Illustrative outputs</span></div>
+  <button class="hint-btn" onclick="toggleHint('io2')">Show illustrative output as per model answer</button>
+  <div class="fs-pair io-reveal" id="io2">
+    <div class="fs-box before"><span class="fs-label">Output from the one-line prompt</span>When a customer reports fraud, the branch should listen carefully, note the details, and advise the customer to file a complaint. The matter should be escalated to the branch manager or the relevant department. Staff should stay polite and reassure the customer that the bank will investigate.</div>
+    <div class="fs-box after"><span class="fs-label">Output from the RISEN prompt</span>BRANCH SOP · Reported Phishing / UPI Fraud (retail)
+
+Step 1 — Reassure &amp; record: customer ID, txn IDs, time, channel. Never ask for OTP/PIN.
+Step 2 — Contain: flag account for enhanced monitoring; block the compromised instrument via [SYSTEM].
+Step 3 — Report: lodge on the fraud-reporting portal within the mandated window; note the acknowledgement no.
+Step 4 — Escalate: hand to the nodal officer if loss &gt; [₹ THRESHOLD]; share the grievance channel.
+Step 5 — Close the loop: give complaint ref + expected TAT; log in the fraud register.
+
+Scope: retail only. Excludes corporate/CMS and card chargebacks.</div>
+  </div>
+
+  <!-- ACTIVITY 3 — NOVANTIS · COSTAR -->
+  <div class="sec-head" style="margin-top:26px">Activity 3 · Novantis Technologies <span class="sec-tag st-purple">IT · COSTAR</span></div>
+  <div class="hl hl-s"><b>Scenario.</b> A 4-hour outage hit a client's order platform on their busiest trading day. VP Delivery Priya Iyer must send the client update — one that reassures and shows control, not a generic apology.</div>
+  <div class="compare-grid">
+    <div><div class="cmp-lbl" style="color:#6a1a1a">What most people type</div><div class="cmp-bad">Write an email apologizing for the outage.</div></div>
+    <div><div class="cmp-lbl" style="color:#1a4a10">Your mission</div><div class="cmp-good">Rebuild it as a COSTAR prompt so the model writes an accountable, executive update — not filler.</div></div>
+  </div>
+  <div class="fw-detail-panel">
+    <div class="fw-dt">Step-by-step — build the COSTAR prompt</div>
+    <div class="fw-row"><div class="fw-l">C</div><div class="fw-r"><strong>Step 1 · Context</strong>Give the facts: a 4-hour outage hit the client's order platform on their peak day; root cause found and fixed; full RCA in progress.</div></div>
+    <div class="fw-row"><div class="fw-l">O</div><div class="fw-r"><strong>Step 2 · Objective</strong>State the goal: reassure the client and demonstrate control while preserving trust — not grovel.</div></div>
+    <div class="fw-row"><div class="fw-l">S</div><div class="fw-r"><strong>Step 3 · Style</strong>Set the register: clear, factual, executive.</div></div>
+    <div class="fw-row"><div class="fw-l">T</div><div class="fw-r"><strong>Step 4 · Tone</strong>Accountable and calm — no jargon, no blame-shifting.</div></div>
+    <div class="fw-row"><div class="fw-l">A</div><div class="fw-r"><strong>Step 5 · Audience</strong>Name the reader: the client's CIO and business sponsor.</div></div>
+    <div class="fw-row"><div class="fw-l">R</div><div class="fw-r"><strong>Step 6 · Response</strong>Specify the shape: a 150-word email — what happened, impact, what we did, what's next — plus one subject line.</div></div>
+  </div>
+  <div class="exer-box">
+    <div class="exer-title">✏ Write your COSTAR prompt</div>
+    <div class="exer-q">Write the full COSTAR prompt for Priya. All six components, in order.</div>
+    <textarea class="exer-ta" placeholder="C: Context&#10;O: Objective&#10;S: Style&#10;T: Tone&#10;A: Audience&#10;R: Response" style="min-height:130px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h9')">Reveal Model Answer</button>
+    <div class="hint-box" id="h9">C: A 4-hour outage hit the client's order platform on their busiest trading day. Root cause (a failed database failover) has been identified and fixed; a full RCA is in progress.<br>O: Reassure the client and demonstrate control while preserving trust — do not grovel or over-apologize.<br>S: Clear, factual, executive.<br>T: Accountable and calm. No jargon, no blame-shifting.<br>A: The client's CIO and business sponsor.<br>R: A 150-word email with one subject line, structured as: what happened, business impact, what we did, what's next (RCA date + a review call).</div>
+  </div>
+    <div class="exer-box" style="background:var(--sur);border-color:var(--bd)">
+    <div class="exer-title" style="color:#6a4c10">📎 Now think: what would you attach?</div>
+    <div class="exer-q" style="color:var(--ink2)">A great prompt still needs the right inputs. List the supporting documents or the data access you’d give the model to make this a strong, grounded case — not something it has to invent.</div>
+    <textarea class="exer-ta" placeholder="e.g. the incident timeline, the SLA clause, the confirmed impact scope…" style="min-height:80px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('da3')">Show suggested attachments</button>
+    <div class="hint-box" id="da3"><b>Illustrative attachments:</b> the incident timeline and RCA-in-progress notes, the SLA terms in the client contract, and the confirmed impact scope (what was and wasn’t affected).</div>
+  </div>
+
+  <div class="sec-head">The difference in output <span class="sec-tag st-gold">Illustrative outputs</span></div>
+  <button class="hint-btn" onclick="toggleHint('io3')">Show illustrative output as per model answer</button>
+  <div class="fs-pair io-reveal" id="io3">
+    <div class="fs-box before"><span class="fs-label">Output from the one-line prompt</span>Subject: Apology for the recent outage
+
+Dear Customer,
+We sincerely apologize for the inconvenience caused by the recent outage. We understand this may have affected you, and our team is working hard to resolve the issue. We value your business and appreciate your patience. Please reach out with any questions.
+
+Regards,
+The Team</div>
+    <div class="fs-box after"><span class="fs-label">Output from the COSTAR prompt</span>Subject: Order platform — 4-hour disruption on [date], resolved
+
+Dear [CIO name],
+Between 09:10 and 13:05 today your order platform was unavailable, affecting checkout on your busiest trading day. Root cause: a failed database failover — now fixed and verified.
+Immediate actions: service restored, a temporary safeguard added, and paused orders reprocessed with no data loss.
+Next: a full RCA and prevention plan to you by Friday, and a 30-minute review at your convenience.
+This fell short of the standard you rely on us for, and we own it.
+
+— Priya Iyer, VP Delivery</div>
+  </div>
+
+
+  <!-- ACTIVITY 4 — SAHYADRI · TRACE -->
+  <div class="sec-head" style="margin-top:26px">Activity 4 · Sahyadri University <span class="sec-tag st-blue">Higher Ed · TRACE</span></div>
+  <div class="hl hl-s"><b>Scenario.</b> New PhD-scholar teaching assistants are running lab sessions and grading for the first time, and standards vary wildly. Dean of Faculty Affairs Dr. Meera Nair wants a short, consistent TA training guide.</div>
+  <div class="compare-grid">
+    <div><div class="cmp-lbl" style="color:#6a1a1a">What most people type</div><div class="cmp-bad">Write a training guide for teaching assistants.</div></div>
+    <div><div class="cmp-lbl" style="color:#1a4a10">Your mission</div><div class="cmp-good">Rebuild it as a TRACE prompt so the guide fits these specific TAs and this university, not TAs in general.</div></div>
+  </div>
+  <div class="fw-detail-panel">
+    <div class="fw-dt">Step-by-step — build the TRACE prompt</div>
+    <div class="fw-row"><div class="fw-l">T</div><div class="fw-r"><strong>Step 1 · Task</strong>Name the deliverable: a concise TA training guide for running lab sessions and grading fairly.</div></div>
+    <div class="fw-row"><div class="fw-l">R</div><div class="fw-r"><strong>Step 2 · Role</strong>Set expertise: a faculty-development lead who has trained hundreds of TAs at large universities.</div></div>
+    <div class="fw-row"><div class="fw-l">A</div><div class="fw-r"><strong>Step 3 · Audience</strong>Describe the reader: first-time PhD-scholar TAs, 24–28, strong in the subject but new to teaching and assessment.</div></div>
+    <div class="fw-row"><div class="fw-l">C</div><div class="fw-r"><strong>Step 4 · Constraints</strong>Bound it: max 4 pages; plain language; include a grading-consistency checklist; align to the university's academic-integrity policy.</div></div>
+    <div class="fw-row"><div class="fw-l">E</div><div class="fw-r"><strong>Step 5 · Examples</strong>Calibrate it: reference how well-run TA programmes structure office hours and rubric-based grading.</div></div>
+  </div>
+  <div class="exer-box">
+    <div class="exer-title">✏ Write your TRACE prompt</div>
+    <div class="exer-q">Write the full TRACE prompt for Dr. Nair. The Audience and Constraints are what stop this from becoming a generic guide.</div>
+    <textarea class="exer-ta" placeholder="T: Task&#10;R: Role&#10;A: Audience&#10;C: Constraints&#10;E: Examples" style="min-height:130px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h10')">Reveal Model Answer</button>
+    <div class="hint-box" id="h10">T: Create a concise training guide for new teaching assistants on running lab sessions and grading fairly.<br>R: Act as a faculty-development lead who has trained hundreds of TAs across large universities.<br>A: The readers are first-time PhD-scholar TAs, aged 24–28 — strong in their subject but new to teaching and assessment.<br>C: Max 4 pages. Plain language, no education jargon. Must include a grading-consistency checklist and align to Sahyadri's academic-integrity policy.<br>E: Model the structure on well-run TA programmes — clear office-hour norms and rubric-based grading with worked examples.</div>
+  </div>
+    <div class="exer-box" style="background:var(--sur);border-color:var(--bd)">
+    <div class="exer-title" style="color:#6a4c10">📎 Now think: what would you attach?</div>
+    <div class="exer-q" style="color:var(--ink2)">A great prompt still needs the right inputs. List the supporting documents or the data access you’d give the model to make this a strong, grounded case — not something it has to invent.</div>
+    <textarea class="exer-ta" placeholder="e.g. the integrity policy, the grading rubric, a sample lab plan…" style="min-height:80px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('da4')">Show suggested attachments</button>
+    <div class="hint-box" id="da4"><b>Illustrative attachments:</b> the university’s academic-integrity policy, the grading rubrics, a sample lab-session plan, and any existing TA norms.</div>
+  </div>
+
+  <div class="sec-head">The difference in output <span class="sec-tag st-gold">Illustrative outputs</span></div>
+  <button class="hint-btn" onclick="toggleHint('io4')">Show illustrative output as per model answer</button>
+  <div class="fs-pair io-reveal" id="io4">
+    <div class="fs-box before"><span class="fs-label">Output from the one-line prompt</span>Teaching Assistant Training Guide
+
+A good teaching assistant should be well prepared, communicate clearly, and treat all students fairly. Be approachable during office hours, grade objectively, and give timely feedback. Support the instructor and maintain professionalism at all times. With dedication and good communication, you will be an effective TA.</div>
+    <div class="fs-box after"><span class="fs-label">Output from the TRACE prompt</span>Sahyadri TA Guide (4 pages, for first-time TAs)
+
+1. Your first lab (setup, safety, the 5-minute brief)
+2. Running the room (pacing, the "no-blank-stare" rule, when to escalate to faculty)
+3. Office hours that scale (a template, and how to avoid doing the homework for them)
+4. Grading consistently
+   · Rubric-first: score the rubric, not the student
+   · Consistency checklist (blind-grade a sample; re-check the top and bottom 3)
+   · Integrity: what to do on suspected copying — per Sahyadri policy, escalate, don't confront
+Worked example: two answers, same rubric, scored side by side.</div>
+  </div>
+
+  <!-- ACTIVITY 5 — MERIDIAN · PARA -->
+  <div class="sec-head" style="margin-top:26px">Activity 5 · Meridian Bank <span class="sec-tag st-green">Banking · PARA</span></div>
+  <div class="hl hl-s"><b>Scenario.</b> First-EMI defaults in Meridian's two-wheeler loan book have jumped, and earlier fixes only half-worked. Head of Credit Arjun Pillai wants a sharp advisory on the residual root causes — not textbook generalities.</div>
+  <div class="compare-grid">
+    <div><div class="cmp-lbl" style="color:#6a1a1a">What most people type</div><div class="cmp-bad">Why are two-wheeler loan defaults rising and how do we fix it?</div></div>
+    <div><div class="cmp-lbl" style="color:#1a4a10">Your mission</div><div class="cmp-good">Rebuild it as a PARA prompt so the model reasons from what you already tried — and targets the residual problem.</div></div>
+  </div>
+  <div class="fw-detail-panel">
+    <div class="fw-dt">Step-by-step — build the PARA prompt</div>
+    <div class="fw-row"><div class="fw-l">P</div><div class="fw-r"><strong>Step 1 · Problem</strong>State it with numbers: first-EMI defaults in two-wheeler loans rose from 1.2% to 2.6% over two quarters.</div></div>
+    <div class="fw-row"><div class="fw-l">A</div><div class="fw-r"><strong>Step 2 · Action</strong>Say what you already did: tightened one bureau cut-off and added tele-verification.</div></div>
+    <div class="fw-row"><div class="fw-l">R</div><div class="fw-r"><strong>Step 3 · Result</strong>Report the outcome honestly: defaults dipped ~20 bps then plateaued at ~2.4%, concentrated in two sourcing channels and one region.</div></div>
+    <div class="fw-row"><div class="fw-l">A</div><div class="fw-r"><strong>Step 4 · Ask</strong>Make the ask precise: identify the 3 most likely root causes of the residual defaults and recommend interventions, ranked by expected impact.</div></div>
+  </div>
+  <div class="exer-box">
+    <div class="exer-title">✏ Write your PARA prompt</div>
+    <div class="exer-q">Write the full PARA prompt for Arjun. The Action and Result are what stop the model from repeating advice you have already tried.</div>
+    <textarea class="exer-ta" placeholder="P: Problem&#10;A: Action&#10;R: Result&#10;A: Ask" style="min-height:120px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h11')">Reveal Model Answer</button>
+    <div class="hint-box" id="h11">P: First-EMI defaults in our two-wheeler loan book rose from 1.2% to 2.6% over two quarters.<br>A: We tightened one bureau score cut-off and added a tele-verification step at onboarding.<br>R: Defaults dipped about 20 bps and then plateaued at ~2.4% — now concentrated in two sourcing channels and one geography.<br>A: Identify the 3 most likely root causes of the residual defaults and recommend targeted interventions, ranked by expected impact, flagging any that need a policy change.</div>
+  </div>
+    <div class="exer-box" style="background:var(--sur);border-color:var(--bd)">
+    <div class="exer-title" style="color:#6a4c10">📎 Now think: what would you attach?</div>
+    <div class="exer-q" style="color:var(--ink2)">A great prompt still needs the right inputs. List the supporting documents or the data access you’d give the model to make this a strong, grounded case — not something it has to invent.</div>
+    <textarea class="exer-ta" placeholder="e.g. default data by channel, the underwriting cut-offs, the channel profiles…" style="min-height:80px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('da5')">Show suggested attachments</button>
+    <div class="hint-box" id="da5"><b>Illustrative attachments:</b> the vintage / first-EMI default data by channel and geography, the current underwriting cut-offs, and the two flagged channels’ sourcing profiles.</div>
+  </div>
+
+  <div class="sec-head">The difference in output <span class="sec-tag st-gold">Illustrative outputs</span></div>
+  <button class="hint-btn" onclick="toggleHint('io5')">Show illustrative output as per model answer</button>
+  <div class="fs-pair io-reveal" id="io5">
+    <div class="fs-box before"><span class="fs-label">Output from the one-line prompt</span>Loan defaults can rise for several reasons: weak underwriting, adverse economic conditions, over-leveraged borrowers, or poor collections. To reduce them, tighten credit checks, verify income carefully, monitor early warning signals, and strengthen your collections process. Regular portfolio review also helps identify risky segments early.</div>
+    <div class="fs-box after"><span class="fs-label">Output from the PARA prompt</span>Residual two-wheeler default — 3 likely root causes (ranked)
+
+1. Channel quality (highest impact): the 2 flagged channels likely source thin-file / first-time borrowers your new cut-off doesn't catch. → Channel-level score floors + clawback on early default.
+2. Geography-specific stress: one region's defaults suggest a local income shock or a dealer-subvention scheme gaming approvals. → Field audit of that region's top 5 dealers.
+3. Tele-verification is a checkbox, not a signal: likely being passed mechanically. → Add 2 verifiable questions + random call-backs.
+
+Flag: channel score floors need credit-policy sign-off.</div>
+  </div>
+
+
+  <!-- ACTIVITY 6 — AEGIS INSURANCE · CREATE -->
+  <div class="sec-head" style="margin-top:26px">Activity 6 · Aegis Insurance <span class="sec-tag st-teal">Insurance · CREATE</span></div>
+  <div class="hl hl-s"><b>Scenario.</b> Claims leakage — money paid out that should not have been — is running high in Aegis's motor book. Head of Claims Rahul Bose wants an AI-drafted reduction plan he can take to the executive committee, not a generic checklist.</div>
+  <div class="compare-grid">
+    <div><div class="cmp-lbl" style="color:#6a1a1a">What most people type</div><div class="cmp-bad">How do we reduce claims leakage?</div></div>
+    <div><div class="cmp-lbl" style="color:#1a4a10">Your mission</div><div class="cmp-good">Rebuild the ask as a full CREATE prompt using the 6 steps below, then reveal the model answer and compare outputs.</div></div>
+  </div>
+  <div class="fw-detail-panel">
+    <div class="fw-dt">Step-by-step — build the CREATE prompt</div>
+    <div class="fw-row"><div class="fw-l">C</div><div class="fw-r"><strong>Step 1 · Character</strong>Give it a role: a claims-transformation lead with 15 years cutting leakage in motor insurance.</div></div>
+    <div class="fw-row"><div class="fw-l">R</div><div class="fw-r"><strong>Step 2 · Request</strong>State the task and scope: design a motor-claims leakage-reduction plan across all branches and the digital channel.</div></div>
+    <div class="fw-row"><div class="fw-l">E</div><div class="fw-r"><strong>Step 3 · Examples / Context</strong>Feed the data: leakage estimated at 8% of paid claims; drivers — inflated repair estimates 45%, missed subrogation 30%, fraud 25%.</div></div>
+    <div class="fw-row"><div class="fw-l">A</div><div class="fw-r"><strong>Step 4 · Adjustments</strong>Add guardrails: deliver within 2 quarters; no changes that breach IRDAI claims-settlement timelines; must not raise genuine-claimant friction.</div></div>
+    <div class="fw-row"><div class="fw-l">T</div><div class="fw-r"><strong>Step 5 · Type of output</strong>Specify format: a prioritized plan — 3 quick wins (30 days), 3 medium (one quarter), 1 structural change — each with an owner and a metric.</div></div>
+    <div class="fw-row"><div class="fw-l">E</div><div class="fw-r"><strong>Step 6 · Extras</strong>Add meta: rate confidence per action and flag any change that needs actuarial or compliance sign-off.</div></div>
+  </div>
+  <div class="exer-box">
+    <div class="exer-title">✏ Write your CREATE prompt</div>
+    <div class="exer-q">Using the 6 steps above, write the full prompt for Rahul. Address every letter explicitly.</div>
+    <textarea class="exer-ta" placeholder="C: Character / Role&#10;R: Request&#10;E: Examples / Context&#10;A: Adjustments&#10;T: Type of output&#10;E: Extras" style="min-height:130px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h12')">Reveal Model Answer</button>
+    <div class="hint-box" id="h12">C: You are a claims-transformation lead with 15 years of experience reducing leakage in motor insurance.<br>R: Design a motor-claims leakage-reduction plan for Aegis, covering all branches and the digital channel.<br>E: Leakage is ~8% of paid claims. Drivers: inflated repair estimates 45%, missed subrogation recovery 30%, fraud 25%.<br>A: Deliverable within 2 quarters. No change that breaches IRDAI claims-settlement timelines. Must not add friction for genuine claimants.<br>T: Prioritized plan — 3 quick wins (30 days), 3 medium (one quarter), 1 structural change — each with a named owner and a metric.<br>E: Rate confidence per action (High/Med/Low). Flag any change needing actuarial or compliance sign-off with [SIGN-OFF].</div>
+  </div>
+    <div class="exer-box" style="background:var(--sur);border-color:var(--bd)">
+    <div class="exer-title" style="color:#6a4c10">📎 Now think: what would you attach?</div>
+    <div class="exer-q" style="color:var(--ink2)">A great prompt still needs the right inputs. List the supporting documents or the data access you’d give the model to make this a strong, grounded case — not something it has to invent.</div>
+    <textarea class="exer-ta" placeholder="e.g. leakage by driver, the repair-cost benchmark, the IRDAI timelines…" style="min-height:80px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('da6')">Show suggested attachments</button>
+    <div class="hint-box" id="da6"><b>Illustrative attachments:</b> the claims-leakage breakdown by driver, the repair-cost benchmark, the subrogation-recovery data, and the IRDAI settlement-timeline rules.</div>
+  </div>
+
+  <div class="sec-head">The difference in output <span class="sec-tag st-gold">Illustrative outputs</span></div>
+  <button class="hint-btn" onclick="toggleHint('io6')">Show illustrative output as per model answer</button>
+  <div class="fs-pair io-reveal" id="io6">
+    <div class="fs-box before"><span class="fs-label">Output from the one-line prompt</span>Ways to reduce claims leakage:
+1. Strengthen claims verification.
+2. Train adjusters better.
+3. Use analytics to detect fraud.
+4. Improve subrogation follow-up.
+5. Audit a sample of claims regularly.
+
+Reducing leakage improves the loss ratio and protects profitability.</div>
+    <div class="fs-box after"><span class="fs-label">Output from the CREATE prompt</span>Motor Claims Leakage Plan · Aegis (confidence: Med-High)
+
+QUICK WINS (30 days)
+1. Auto-flag repair estimates &gt;20% above the parts-and-labour benchmark → surveyor review. Targets inflated estimates (45%). [Owner: Claims Ops]
+2. Subrogation checklist at intake so recovery isn't missed (30%). [Owner: Recovery desk]
+3. Second-signature rule on cash-loss claims above [₹ THRESHOLD].
+
+THIS QUARTER
+4. Fraud model on the top 3 high-loss garages (fraud = 25%).
+
+STRUCTURAL
+7. Straight-through settlement for low-value genuine claims [SIGN-OFF: actuarial].
+
+KPIs: leakage 8%→5% in 2 quarters; genuine-claim TAT unchanged (IRDAI).</div>
+  </div>
+
+  <!-- ACTIVITY 7 — ZENTARA PHARMA · RISEN -->
+  <div class="sec-head" style="margin-top:26px">Activity 7 · Zentara Pharma <span class="sec-tag st-rose">Pharma · RISEN</span></div>
+  <div class="hl hl-s"><b>Scenario.</b> Adverse-event reports reach Zentara through inconsistent routes, risking missed regulatory timelines. Head of Pharmacovigilance Rohit Sinha wants one clean SOP staff can follow without calling the safety desk.</div>
+  <div class="compare-grid">
+    <div><div class="cmp-lbl" style="color:#6a1a1a">What most people type</div><div class="cmp-bad">How should we handle adverse event reports?</div></div>
+    <div><div class="cmp-lbl" style="color:#1a4a10">Your mission</div><div class="cmp-good">Turn this into a RISEN prompt so the model returns a usable step-by-step SOP — not general guidance.</div></div>
+  </div>
+  <div class="fw-detail-panel">
+    <div class="fw-dt">Step-by-step — build the RISEN prompt</div>
+    <div class="fw-row"><div class="fw-l">R</div><div class="fw-r"><strong>Step 1 · Role</strong>Set expertise: a pharmacovigilance officer fluent in ICH-GVP and local adverse-event reporting timelines.</div></div>
+    <div class="fw-row"><div class="fw-l">I</div><div class="fw-r"><strong>Step 2 · Instructions</strong>Name the deliverable: an SOP for intake and triage of a suspected adverse-event report.</div></div>
+    <div class="fw-row"><div class="fw-l">S</div><div class="fw-r"><strong>Step 3 · Steps</strong>Lay out the sequence: capture the minimum four elements → assess seriousness → log a case ID → escalate serious cases within the mandated window → follow up for missing data → reconcile.</div></div>
+    <div class="fw-row"><div class="fw-l">E</div><div class="fw-r"><strong>Step 4 · End Goal</strong>Define done: a one-page SOP a medical-affairs or call-centre staffer can execute unaided.</div></div>
+    <div class="fw-row"><div class="fw-l">N</div><div class="fw-r"><strong>Step 5 · Narrowing</strong>Bound it: spontaneous reports for marketed products only; exclude clinical-trial SAEs and product-quality-only complaints.</div></div>
+  </div>
+  <div class="exer-box">
+    <div class="exer-title">✏ Write your RISEN prompt</div>
+    <div class="exer-q">Write the full RISEN prompt for Rohit. Make the Steps explicit — that is what turns guidance into an SOP.</div>
+    <textarea class="exer-ta" placeholder="R: Role&#10;I: Instructions&#10;S: Steps&#10;E: End Goal&#10;N: Narrowing" style="min-height:130px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h13')">Reveal Model Answer</button>
+    <div class="hint-box" id="h13">R: Act as a pharmacovigilance officer with expertise in ICH-GVP and local adverse-event reporting timelines.<br>I: Create an SOP for intake and triage of a suspected adverse-event report for a marketed product.<br>S: Step 1 — Capture the four minimum elements (reporter, patient, product, event). Step 2 — Assess seriousness against defined criteria. Step 3 — Create a case ID and log in the safety database. Step 4 — Escalate serious/expedited cases to the safety desk within the mandated window. Step 5 — Follow up for missing data within [X] days. Step 6 — Reconcile against sources to avoid duplicates.<br>E: A one-page SOP a medical-affairs or call-centre staffer can execute without calling the safety desk.<br>N: Spontaneous reports for marketed products only. Exclude clinical-trial SAEs and product-quality-only complaints.</div>
+  </div>
+    <div class="exer-box" style="background:var(--sur);border-color:var(--bd)">
+    <div class="exer-title" style="color:#6a4c10">📎 Now think: what would you attach?</div>
+    <div class="exer-q" style="color:var(--ink2)">A great prompt still needs the right inputs. List the supporting documents or the data access you’d give the model to make this a strong, grounded case — not something it has to invent.</div>
+    <textarea class="exer-ta" placeholder="e.g. the reporting timelines, the seriousness criteria, the intake form…" style="min-height:80px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('da7')">Show suggested attachments</button>
+    <div class="hint-box" id="da7"><b>Illustrative attachments:</b> the ICH-GVP reporting timelines, the seriousness-assessment criteria, the safety-database intake fields, and the existing case-intake form.</div>
+  </div>
+
+  <div class="sec-head">The difference in output <span class="sec-tag st-gold">Illustrative outputs</span></div>
+  <button class="hint-btn" onclick="toggleHint('io7')">Show illustrative output as per model answer</button>
+  <div class="fs-pair io-reveal" id="io7">
+    <div class="fs-box before"><span class="fs-label">Output from the one-line prompt</span>When an adverse event is reported, staff should record the details, determine how serious it is, and report it to the pharmacovigilance team. Serious events must be reported to regulators promptly. Always follow the relevant guidelines and keep proper documentation of every report received.</div>
+    <div class="fs-box after"><span class="fs-label">Output from the RISEN prompt</span>SOP · Adverse-Event Intake &amp; Triage (marketed products)
+
+Step 1 — Capture the 4 minimum elements: reporter, patient, product, event.
+Step 2 — Assess seriousness against defined criteria (death, hospitalisation, etc.).
+Step 3 — Create case ID; log in the safety database.
+Step 4 — Escalate serious/expedited cases to the safety desk within [X hours].
+Step 5 — Follow up for missing data within [X days]; document attempts.
+Step 6 — Reconcile against sources to remove duplicates.
+
+Scope: spontaneous reports, marketed products. Excludes trial SAEs and quality-only complaints.</div>
+  </div>
+
+  <!-- ACTIVITY 8 — AROGYA HEALTH · COSTAR -->
+  <div class="sec-head" style="margin-top:26px">Activity 8 · Arogya Health Network <span class="sec-tag st-indigo">Healthcare · COSTAR</span></div>
+  <div class="hl hl-s"><b>Scenario.</b> Discharge instructions are written in clinical language patients don't understand, and readmissions are rising. Head of Patient Experience Sneha Pillai wants an AI-drafted, patient-friendly discharge summary — clear and reassuring, not a wall of jargon.</div>
+  <div class="compare-grid">
+    <div><div class="cmp-lbl" style="color:#6a1a1a">What most people type</div><div class="cmp-bad">Rewrite these discharge instructions for patients.</div></div>
+    <div><div class="cmp-lbl" style="color:#1a4a10">Your mission</div><div class="cmp-good">Rebuild it as a COSTAR prompt so the output fits this patient, at the right reading level — not generic advice.</div></div>
+  </div>
+  <div class="fw-detail-panel">
+    <div class="fw-dt">Step-by-step — build the COSTAR prompt</div>
+    <div class="fw-row"><div class="fw-l">C</div><div class="fw-r"><strong>Step 1 · Context</strong>Give the facts: a patient is going home after a cardiac procedure with medicines, wound care and follow-up; clinical notes are attached.</div></div>
+    <div class="fw-row"><div class="fw-l">O</div><div class="fw-r"><strong>Step 2 · Objective</strong>State the goal: a discharge summary the patient will actually follow, reducing avoidable readmission — without giving new medical advice.</div></div>
+    <div class="fw-row"><div class="fw-l">S</div><div class="fw-r"><strong>Step 3 · Style</strong>Set the register: plain, warm, step-by-step.</div></div>
+    <div class="fw-row"><div class="fw-l">T</div><div class="fw-r"><strong>Step 4 · Tone</strong>Reassuring and clear — no jargon, no alarm.</div></div>
+    <div class="fw-row"><div class="fw-l">A</div><div class="fw-r"><strong>Step 5 · Audience</strong>Name the reader: the patient and a family caregiver, at a 6th-grade reading level.</div></div>
+    <div class="fw-row"><div class="fw-l">R</div><div class="fw-r"><strong>Step 6 · Response</strong>Specify the shape: sections for medicines, wound care, warning signs (when to call), and the follow-up date; keep only the facts in the notes.</div></div>
+  </div>
+  <div class="exer-box">
+    <div class="exer-title">✏ Write your COSTAR prompt</div>
+    <div class="exer-q">Write the full COSTAR prompt for Sneha. All six components, in order — the Audience and the &ldquo;don't add new advice&rdquo; guardrail matter most here.</div>
+    <textarea class="exer-ta" placeholder="C: Context&#10;O: Objective&#10;S: Style&#10;T: Tone&#10;A: Audience&#10;R: Response" style="min-height:130px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('h14')">Reveal Model Answer</button>
+    <div class="hint-box" id="h14">C: A patient is going home after a cardiac procedure with prescribed medicines, wound-care needs and a follow-up appointment. The clinical discharge notes are provided.<br>O: Produce a discharge summary the patient will actually follow, to reduce avoidable readmission — without introducing any new medical advice beyond the notes.<br>S: Plain, warm, step-by-step.<br>T: Reassuring and clear. No jargon, no alarm.<br>A: The patient and a family caregiver, written at a 6th-grade reading level.<br>R: Sections for Medicines (what, when, why), Wound care, Warning signs — when to call the hospital, and the Follow-up date. Use only the facts in the notes; mark anything unclear as [CHECK WITH DOCTOR].</div>
+  </div>
+    <div class="exer-box" style="background:var(--sur);border-color:var(--bd)">
+    <div class="exer-title" style="color:#6a4c10">📎 Now think: what would you attach?</div>
+    <div class="exer-q" style="color:var(--ink2)">A great prompt still needs the right inputs. List the supporting documents or the data access you’d give the model to make this a strong, grounded case — not something it has to invent.</div>
+    <textarea class="exer-ta" placeholder="e.g. the discharge notes, the medication schedule, the education templates…" style="min-height:80px"></textarea>
+    <button class="hint-btn" onclick="toggleHint('da8')">Show suggested attachments</button>
+    <div class="hint-box" id="da8"><b>Illustrative attachments:</b> the patient’s clinical discharge notes, the prescribed-medication schedule, the hospital’s approved patient-education templates, and the reading-level guideline.</div>
+  </div>
+
+  <div class="sec-head">The difference in output <span class="sec-tag st-gold">Illustrative outputs</span></div>
+  <button class="hint-btn" onclick="toggleHint('io8')">Show illustrative output as per model answer</button>
+  <div class="fs-pair io-reveal" id="io8">
+    <div class="fs-box before"><span class="fs-label">Output from the one-line prompt</span>Discharge Instructions
+
+The patient underwent the procedure and is advised to continue prescribed medications as directed. Maintain wound hygiene and monitor for complications. Adhere to the follow-up schedule and seek medical attention if symptoms worsen. Follow standard post-procedure precautions and maintain a healthy lifestyle.</div>
+    <div class="fs-box after"><span class="fs-label">Output from the COSTAR prompt</span>Going home after your heart procedure
+
+Your medicines
+· Blood-thinner — 1 tablet after breakfast, every day. It stops clots.
+· Do not stop it without asking your doctor.
+
+Your wound
+· Keep it clean and dry. Change the dressing daily.
+
+Call the hospital now if you have
+· Chest pain, heavy bleeding, or a fever above 100.4°F.
+
+Your next visit
+· [DATE]. Bring this sheet and your medicines.
+Anything unclear here → [CHECK WITH DOCTOR].</div>
+  </div>
+
+  <div class="hl hl-i" style="margin-top:22px"><b>The takeaway.</b> Same question every time. The one-line prompt gives you something generic you still have to redo; the framework gives you a first draft you can almost send. The framework isn't more "advanced" — it just front-loads the thinking you would have had to do anyway.</div>
+
+  <div class="nav-foot"><button class="nb" onclick="goMod(7)">← Back</button><div class="nb-ct">Module 10 of 10</div><button class="nb pri" onclick="goMod(9)">Next: Evaluation →</button></div>
+</div>
+
+<!-- MODULE 9: PROMPT EVALUATION -->
+<div class="mod" id="m9">
+  <div class="mod-label">Module 9 · Evaluation</div>
+  <div class="mod-title">Prompt Evaluation — Score It Before You Send It</div>
+  <div class="mod-intro">Nearly every disappointing answer is a briefing failure, not a model failure. This module gives you a way to score a prompt <em>before</em> you send it — on five dimensions — so fixing a weak result stops being guesswork. Paste any prompt into the evaluator and see where it is strong and where it will cost you rounds of rework.</div>
+  <div class="hl hl-i"><b>The idea.</b> A good prompt can be judged on five things, each scored 0&ndash;4 for a total out of 20. Score before you send, fix the lowest dimension first, and don&rsquo;t chase a perfect 20 &mdash; the last point usually needs data you genuinely don&rsquo;t have, which is a fact about your engagement, not a flaw in your prompt.</div>
+
+  <div class="sec-head">The five dimensions <span class="sec-tag st-gold">0&ndash;4 each &middot; /20 total</span></div>
+  <table class="sum-table">
+    <thead><tr><th>#</th><th>Dimension</th><th>The question it asks</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Clarity</td><td>Could two different people read this prompt and expect the same output?</td></tr>
+      <tr><td>2</td><td>Specificity</td><td>Are there real numbers, named roles and concrete details &mdash; or vague placeholders?</td></tr>
+      <tr><td>3</td><td>Constraint quality</td><td>Are the boundaries hard and binary, or soft and advisory?</td></tr>
+      <tr><td>4</td><td>Output definition</td><td>Would the model know exactly what artefact to produce, and how to structure it?</td></tr>
+      <tr><td>5</td><td>Context sufficiency</td><td>Does it have everything it needs to answer without guessing or inventing?</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sec-head">The prompt evaluator <span class="sec-tag st-purple">Paste &middot; score &middot; fix</span></div>
+  <div class="exer-box" style="background:var(--sur);border-color:var(--bd)">
+    <div class="exer-title" style="color:#6a4c10">&#9998; Score any prompt out of 20</div>
+    <div class="exer-q" style="color:var(--ink2)">Paste a prompt &mdash; your own, or one of the samples &mdash; and press <b>Score my prompt</b>. You&rsquo;ll get a mark on each of the five dimensions, a total, a grade, and the single fix that will move the needle most.</div>
+    <textarea id="evText" class="ev-ta" placeholder="Paste any prompt here&#8230;&#10;&#10;e.g. You are a hospital CFO. Summarise our Q3 cost overruns for the board in a 4-row table (campus, root cause, amount, fix), under 150 words, and flag any assumption."></textarea>
+    <div class="ev-actions">
+      <button class="ev-btn pri" id="evScoreBtn">Score my prompt</button>
+      <button class="ev-btn" id="evSampleWeak">Try a weak prompt</button>
+      <button class="ev-btn" id="evSampleStrong">Try a strong prompt</button>
+      <button class="ev-btn" id="evReset">Clear</button>
+    </div>
+    <div class="ev-result" id="evResult">
+      <div class="ev-topline">
+        <div class="ev-total"><b id="evTotal">0</b> / 20</div>
+        <div class="ev-grade" id="evGrade">&mdash;</div>
+      </div>
+      <div id="evDims"></div>
+      <div class="ev-diag" id="evDiag"></div>
+    </div>
+    <div class="ev-note"><b>How it works:</b> this is a fast, rules-based design check aligned to the five dimensions &mdash; it inspects your prompt for verbs, numbers, named roles, hard limits, format and context signals. It scores the <em>design</em> of the prompt, not the truth of its content, so treat the score as a briefing checklist, not a model&rsquo;s verdict.</div>
+  </div>
+
+  <div class="hl hl-s"><b>Using this on your own work.</b> (1) Score before you send, not after &mdash; catch a missing dimension while it costs seconds. (2) Fix the lowest dimension first, not the one you find most interesting: a prompt scoring 4,4,0,4,4 is failing on constraints, and adding more context won&rsquo;t help. (3) Change one dimension at a time when you revise, so you learn what each is worth.</div>
+
+  <div class="nav-foot"><button class="nb" onclick="goMod(8)">&larr; Back</button><div class="nb-ct">Lab Complete</div><button class="nb pri" onclick="goMod(0)">Restart Lab &#8635;</button></div>
+</div>
+</div>
+<script>
+let curOrg=0,curMod=0,openFW=null;
+function setOrg(i){curOrg=i;document.querySelectorAll('.org-tab').forEach((t,j)=>t.classList.toggle('active',j===i));document.querySelectorAll('.org-hero').forEach((h,j)=>h.classList.toggle('active',j===i));}
+function goMod(n){curMod=n;document.querySelectorAll('.mod').forEach((m,i)=>m.classList.toggle('active',i===n));document.querySelectorAll('.npill').forEach((p,i)=>p.classList.toggle('active',i===n));document.getElementById('prog').style.width=((n+1)/10*100)+'%';window.scrollTo({top:0,behavior:'smooth'});}
+function toggleHint(id){const el=document.getElementById(id);el.classList.toggle('show');}
+function toggleFW(i){const cards=document.querySelectorAll('.fw-card');const panel=document.getElementById('fwpanel');const content=document.getElementById('fwcontent');if(openFW===i){cards[i].classList.remove('sel');panel.classList.remove('open');openFW=null;return;}cards.forEach(c=>c.classList.remove('sel'));cards[i].classList.add('sel');const d=fwData[i];content.innerHTML=`<div class="fw-dt">${d.title}</div>`+d.rows.map(r=>`<div class="fw-row"><div class="fw-l">${r[0]}</div><div class="fw-r"><strong>${r[1]}</strong>${r[2]}</div></div>`).join('');panel.classList.add('open');openFW=i;}
+function mkEx(num,who,task,ctx,prompt,ptype,why,cid){const c=document.getElementById(cid);if(!c)return;const id=`ex${cid}_${num}`;const d=document.createElement('div');d.className='ex-block';d.innerHTML=`<div class="ex-head" onclick="toggleEx('${id}')"><div class="ex-meta"><div class="ex-num">${num}</div><div><div class="ex-who">${who}</div><div class="ex-task">${task}</div></div></div><div class="ex-caret" id="car_${id}">▾</div></div><div class="ex-body" id="${id}"><div class="ex-context">${ctx}</div><div class="prompt-box">${prompt}<span class="pb-label">${ptype}</span></div>${why?`<div class="why-box">${why}</div>`:''}${(window.exDocs&&window.exDocs[cid+"_"+num])?`<div class="docs-box">📎 <b>Supporting docs to attach:</b> ${window.exDocs[cid+"_"+num]}</div>`:''}</div>`;c.appendChild(d);}
+function toggleEx(id){const body=document.getElementById(id);const car=document.getElementById('car_'+id);const open=body.classList.toggle('open');car.classList.toggle('open',open);}
+const fwData=[
+  {title:'RISEN',rows:[['R','Role','Act as Meridian Bank\'s Head of Compliance with expertise in RBI cyber-incident and IT-outsourcing directions.'],['I','Instructions','Create a standard operating procedure for handling a suspected customer-data breach at a branch.'],['S','Steps','Step 1: Contain and isolate. Step 2: Assess scope and records affected. Step 3: Notify CISO and Principal Nodal Officer within 1 hour. Step 4: Preserve logs and document. Step 5: Report to RBI/CERT-In in the mandated window and inform affected customers.'],['E','End Goal','A one-page SOP a branch manager can follow without waiting for legal.'],['N','Narrowing','Limit to branch-level incidents under 500 customer records. Exclude core-banking ransomware scenarios.']]},
+  {title:'COSTAR',rows:[['C','Context','Meridian Bank is launching a goal-based recurring-deposit product for young salaried customers.'],['O','Objective','Create a campaign message that drives sign-ups and explains goal-based saving simply.'],['S','Style','Warm, aspirational, plain Indian English — friendly, not preachy.'],['T','Tone','Encouraging and trustworthy. Never over-promise returns or imply guaranteed gains.'],['A','Audience','Salaried 24–35 year-olds in tier-1/2 cities, first serious savers.'],['R','Response','Three campaign headline options + one 80-word paragraph for the app landing screen.']]},
+  {title:'TRACE',rows:[['T','Task','Create a new-joiner onboarding guide for campus-hire engineers joining Novantis\' delivery teams.'],['R','Role','Head of Talent Development with 15 years of IT-services L&D experience.'],['A','Audience','Fresh engineering graduates aged 21–24 with strong CS basics but no client-delivery experience.'],['C','Constraints','Max 12 pages. No jargon without explanation. Must include a delivery glossary and a one-page security do\'s-and-don\'ts.'],['E','Examples','Reference the structure of large IT-services onboarding academies as a benchmark.']]},
+  {title:'PARA',rows:[['P','Problem','Sahyadri\'s admissions helpdesk takes 6 days on average to resolve document-verification queries — 3 days above the point where applicants drop off.'],['A','Action','Added 2 helpdesk staff and a WhatsApp query line. Resolution fell by 1.5 days.'],['R','Result','Still 1.5 days above target. The bottleneck sits at the manual eligibility-document handoff between the helpdesk and the academic section.'],['A','Ask','Identify the 3 most likely root causes of the handoff delay and recommend interventions.']]}
+];
+
+
+const examples={
+  'ex-c-mc':[
+    [1,'Dr. Anjali Deshpande · VC','Faculty-retention strategy','Anjali is preparing a Board-of-Management note on faculty attrition after engineering-department exits hit 18%.','C: You are Sahyadri University\'s Dean of Faculty Affairs with 20 yrs of academic administration experience.\nR: Develop a faculty-retention strategy for engineering departments where attrition is 18% — 9pts above the sector norm.\nE: Exit data: pay parity 38%, research support 29%, workload 22%. A private university hired away 22 assistant professors.\nA: Actionable within 6 months. No option above ₹4 crore recurring. No blanket pay revisions (UGC-linked).\nT: Prioritized action plan: 3 actions in 30 days, 3 in 90 days, 1 structural change at 180 days.\nE: Rate confidence per recommendation. Flag any assumption needing state-government approval.','CREATE','All 6 components work together: role sets academic-admin expertise, examples give real exit data, adjustments keep options inside UGC and budget limits.'],
+    [2,'Sanjay Rao · Registrar','Grant-utilisation variance analysis','Year-end accounts show ₹6.4 crore of research-grant funds unspent across 3 schools, risking clawback.','C: Act as a university finance controller expert in grant accounting and UGC/AICTE utilisation norms.\nR: Analyse Sahyadri\'s ₹6.4 crore grant under-utilisation across the Schools of Engineering, Science and Management.\nE: Engineering ₹3.1cr (equipment orders stalled). Science ₹2.0cr (hiring delays). Management ₹1.3cr (reason unclear). Sanction expires 31 Mar.\nA: Focus only on funds recoverable this quarter. Exclude endowment corpus.\nT: Table — School | Root Cause | ₹ at Risk | Corrective Action | Owner.\nE: Flag data gaps. Rate each action by ease (Easy/Medium/Hard).','CREATE','The examples component does the heavy lifting — real figures prevent generic advice.'],
+    [3,'Dr. Meera Nair · Dean, Faculty','Performance-improvement plan','A senior professor has drawn 4 student grievances and 2 peer complaints in one semester.','C: You are an HR business partner specializing in higher-education workforce management and service rules.\nR: Draft a one-semester performance-improvement plan for a senior professor with documented conduct issues.\nE: Issues: 4 student grievances (conduct in class), 2 peer complaints (tone in meetings). No prior formal action.\nA: Must comply with the university\'s statutory service rules. No language implying a pre-determined outcome.\nT: PIP document: Issue summary, Expectations, Monthly milestones, Consequences, Sign-off block.\nE: Flag any clause the university\'s legal cell should review before issue.','CREATE','The adjustments component is critical — statutory service rules change what language is acceptable.'],
+    [4,'Kunal Shah · Admissions','Enrolment outreach campaign','Sahyadri is launching outreach for a new B.Tech (AI &amp; Data Science) programme to fill 120 seats.','C: You are a higher-education marketing lead expert in student engagement and admissions funnels.\nR: Create a 3-month outreach campaign for Sahyadri\'s new B.Tech (AI &amp; Data Science), 120 seats.\nE: Target: 3,000 qualified applicants. Channels: school counsellor tie-ups, regional-language social, education fairs. A prior launch hit 34% application-to-enrolment.\nA: All claims must match AICTE-approved intake and fee. No guaranteed-placement language.\nT: Month-by-month plan: Channel, Message, Tactic, KPI. Plus one 60-second reel script.\nE: Flag any claim requiring approval from the admissions committee.','CREATE',''],
+    [5,'Fatima Sheikh · Exams','Emergency examination protocol','Sahyadri needs a new contingency protocol after two exam halls were lost to a ceiling leak mid-session.','C: You are a university examinations expert who has designed contingency protocols for large affiliating universities.\nR: Design an exam-hall contingency protocol activatable within 2 hours of a venue-loss alert.\nE: Last incident: 1,900 seats lost, single-slot ordinance, invigilator roster fixed, alternate halls 9 km away.\nA: Must preserve one common slot and per-candidate seating norms. No second sitting for the same paper.\nT: Decision flowchart (text-based) + a one-page quick-reference card for the exam superintendent.\nE: Identify the single most likely failure point and how to mitigate it.','CREATE','']
+  ],
+  'ex-c-vr':[
+    [1,'Ritu Aggarwal · CRO','Unsecured-lending risk review','Meridian is weighing a ₹500 crore expansion of unsecured personal loans as delinquencies tick up.','C: Act as a Chief Risk Officer at a commercial bank with expertise in retail-credit risk and RBI norms.\nR: Assess the risk of expanding the unsecured personal-loan book by ₹500 crore in the current cycle.\nE: Book ₹4,200cr, GNPA 2.1% rising, 90+ DPD up 40bps QoQ, approval rate 46%, blended yield 15.8%.\nA: Any recommendation must stay within board risk-appetite and capital-adequacy limits. No relaxation of income proof.\nT: Risk matrix (Likelihood x Impact) + 3 options with expected-loss, capital and yield trade-offs.\nE: Recommend which option to pursue. Flag assumptions about the delinquency trajectory.','CREATE',''],
+    [2,'Arjun Pillai · Head of Credit','SME credit-policy redesign','Meridian\'s SME turnaround time is 14 days vs a fintech benchmark of 3, and win-rates are falling.','C: You are a Head of Credit expert in SME underwriting, cash-flow lending and digital credit journeys.\nR: Redesign Meridian\'s SME working-capital credit policy to cut sanction time from 14 days to 5.\nE: Current: 60% of time in document collection and manual spreading. Bureau + GST + bank-statement data available via API.\nA: Must retain dual-approval above ₹1 crore. No dilution of end-use monitoring.\nT: Redesigned policy: Segments, Data inputs, Auto-decision rules, Manual-review triggers, Controls.\nE: Flag every step that needs credit-committee approval. Rate each change by risk added.','CREATE',''],
+    [3,'Imran Qureshi · Compliance','AML/KYC policy refresh','Meridian must update its AML policy ahead of an RBI inspection in 60 days.','C: You are a Head of Compliance with deep expertise in RBI KYC Master Directions and PMLA.\nR: Rewrite Meridian\'s AML/KYC policy to reflect current beneficial-ownership and CDD requirements.\nE: Current policy: 2021. Missing: updated CDD steps, revised beneficial-ownership thresholds, STR filing timelines.\nA: Must withstand RBI inspection. Plain language where possible. Citations in official circular format.\nT: Policy document: Scope, Definitions, Procedures, Training Requirements, Annual-Review trigger.\nE: Flag every section needing sign-off from the Principal Officer or outside counsel.','CREATE',''],
+    [4,'Vikram Menon · Retail','Branch-network rationalisation','Meridian must decide the future of 60 low-footfall branches as customers shift to the app.','C: Act as a retail-banking strategy head with expertise in distribution and channel economics.\nR: Design a rationalisation plan for 60 low-footfall branches without breaching service obligations.\nE: These 60 branches: 4% of deposits, 22% of rent cost, 71% txns already digital. 18 are in priority-sector/unbanked areas.\nA: Cannot close any branch in an unbanked/priority location. Must retain cash-access within 5 km.\nT: Plan: keep / convert to BC-outlet / merge / relocate, per branch, with rationale and customer-impact note.\nE: Flag every branch where closure needs RBI intimation. Rate customer-impact per action.','CREATE',''],
+    [5,'Neha Kulkarni · Marketing','Digital-adoption campaign','Meridian wants to move 2 million branch-reliant customers to the mobile app in 6 months.','C: You are a Head of Marketing &amp; Digital expert in behaviour-change campaigns for financial services.\nR: Create a 6-month campaign to move 2M branch-reliant customers to Meridian\'s mobile app.\nE: Segment: 45–65 yrs, semi-urban, low app trust. Barriers: fear of fraud, language, low confidence. Branch staff can assist.\nA: No incentive that erodes fee income. All messaging RBI-compliant, no fear-based fraud framing.\nT: Plan: Segment, Message, Channel, Branch-assist tactic, KPI. Plus one vernacular SMS script.\nE: Flag any tactic requiring compliance review. Rate confidence in the adoption target.','CREATE','']
+  ],
+  'ex-c-nx':[
+    [1,'Rohan Gupta · CTO','AI-in-delivery business case','Novantis\' board wants a business case before funding firm-wide AI coding tools.','C: You are a CTO advisor expert in engineering productivity and AI-assisted software delivery.\nR: Build the business case for rolling AI coding assistants across Novantis\' 3,800 engineers.\nE: Pilot: 200 engineers, ~18% faster on boilerplate, no defect-rate rise, licence ₹1,600/engineer/month.\nA: Client IP and data-residency clauses must hold. No client code leaves approved environments.\nT: Business case: Problem, Pilot evidence, Costs, Benefits, Risks, Phased rollout, Decision ask.\nE: Rate ROI confidence. Flag the single assumption most likely to break the case.','CREATE','The examples component anchors the case in real pilot numbers rather than vendor claims.'],
+    [2,'Priya Iyer · VP Delivery','Account turnaround plan','A flagship client account is red — SLA breaches for 3 straight months and an unhappy sponsor.','C: You are a delivery-transformation partner with 15 yrs turning around at-risk IT engagements.\nR: Design a 90-day turnaround plan for a red account breaching availability and resolution SLAs.\nE: 40-person team, 3 months of SLA misses, attrition 26%, sponsor NPS negative, penalty clause triggered.\nA: Executable with the existing team; no new hiring budget. No re-baselining the contract in month 1.\nT: 90-day plan: Week 1–2 (diagnostic), Month 1 (stabilise), Month 2 (recover SLAs), Month 3 (rebuild trust).\nE: Identify the one thing that, if not fixed in 30 days, makes the rest of the plan fail.','CREATE',''],
+    [3,'Karan Malhotra · CISO','AI-usage security policy','Engineers are pasting client code into public AI tools; Karan needs a policy before an audit.','C: You are a CISO expert in secure AI adoption, data-loss prevention and ISO 27001 / SOC 2 controls.\nR: Write Novantis\' acceptable-use policy for AI coding and chat tools across delivery teams.\nE: Incidents: 3 cases of client code pasted into public tools. 40 clients, varied data-residency and IP clauses.\nA: Must map to ISO 27001 and each client\'s MSA. Enforceable via DLP and approved-tool allow-list.\nT: Policy: Scope, Approved tools, Prohibited actions, Data classification rules, Enforcement, Exceptions.\nE: Flag any control needing client consent. Rate residual risk after the policy.','CREATE',''],
+    [4,'Deepak Rao · Talent','Skills-based hiring redesign','Novantis must hire 400 engineers in 2 quarters while raising the bar on AI-era skills.','C: Act as a Head of Talent Acquisition expert in skills-based hiring for IT services at scale.\nR: Redesign Novantis\' engineer hiring to fill 400 roles in 6 months with better AI-era skill signals.\nE: Current: 42-day time-to-hire, 28% offer-decline, screening still resume-keyword based. Campus + lateral mix.\nA: No drop in quality bar. Interview load on senior engineers must not rise more than 10%.\nT: Redesigned funnel: Sourcing, Screening (skills tasks), Interview loop, Offer, with owners and SLAs.\nE: Flag steps that need engineering-leadership buy-in. Estimate impact on time-to-hire.','CREATE',''],
+    [5,'Ananya Bose · Presales','Competitive bid strategy','Novantis is one of five bidders for a ₹120 crore, 5-year managed-services deal.','C: You are a presales leader expert in large IT managed-services bids and win strategy.\nR: Build the win strategy for a ₹120cr, 5-year managed-services RFP against 4 named competitors.\nE: Incumbent is one competitor; client pains: cost, slow change requests, weak reporting. Novantis edge: automation, near-shore pods.\nA: Bid within a 12% margin floor. No commitments the delivery org has not validated.\nT: Win plan: Client hot-buttons, Our differentiated themes (3), Competitor counters, Pricing posture, Proof points.\nE: Rate win probability. Flag the single most important proof point to secure before submission.','CREATE','']
+  ],
+  'ex-r-mc':[
+    [1,'Sanjay Rao · Registrar','Finance briefing for deans','Sanjay needs a brief for deans who are not finance-trained.','R: Act as a university finance controller communicating to non-finance deans.\nT: Summarise Sahyadri\'s October position — fee collection ₹41cr (target ₹43cr), salary cost 2.1% over budget, grants on plan, surplus ₹3.8cr.\nF: 3-bullet summary. Plain language. Bold the one action each dean should take.','RTF','RTF fits — the task is bounded, the format is clear, and the role calibrates the language level.'],
+    [2,'Dr. Meera Nair · Dean, Faculty','Job posting — Assistant Professor','Sahyadri is hiring to fill engineering vacancies.','R: Act as a higher-education talent specialist who writes postings that attract strong faculty.\nT: Write a posting for an Assistant Professor (Computer Engineering) at Sahyadri. Pay: as per UGC 7th CPC. Perks: seed research grant, PhD-scholar support, on-campus housing.\nF: 3-section posting: Role overview (2 sentences), What you\'ll do (5 bullets), Why Sahyadri (3 differentiators). Max 280 words. No bureaucratic jargon.','RTF',''],
+    [3,'Kunal Shah · Admissions','Newsletter intro for applicants','Monthly email to 40,000 registered prospective students.','R: Act as an admissions communications writer skilled in warm, accessible student-facing content.\nT: Write the opening paragraph for Sahyadri\'s November applicant newsletter. Theme: scholarship deadlines and open-day invite. Mention on-the-spot document check at the open day.\nF: 80 words max. Simple, encouraging, not formal. No jargon.','RTF',''],
+    [4,'Dr. Anjali Deshpande · VC','Board update on academic quality','Quarterly academic-quality update for the Board of Management.','R: Act as a Vice-Chancellor presenting academic-quality metrics to the Board of Management.\nT: Draft a 3-minute verbal update on Q3 academic quality. Pass rate 88% (up 3pts). Placement 71% (target 75%). NAAC re-accreditation on track.\nF: Headline result, 2 highlights, 1 area of focus, 1 action. 200 words max. Confident tone.','RTF',''],
+    [5,'Fatima Sheikh · Exams','Agenda — exam-cell coordination','Weekly coordination meeting for exam superintendents across 4 campuses.','R: Act as a Controller of Examinations who runs tight, outcome-focused coordination meetings.\nT: Create an agenda for a 60-minute weekly meeting of 4 campus exam superintendents. Standing items: schedule status, invigilation roster, malpractice cases. This week add: revised evaluation timeline, question-paper security review.\nF: Time-boxed agenda. Each item: time, presenter, decision needed (yes/no). No item over 10 minutes.','RTF','']
+  ],
+  'ex-r-vr':[
+    [1,'Neha Kulkarni · Marketing','Instagram caption — savings product','Launch-day post for the new goal-based recurring deposit.','R: Act as Meridian\'s Head of Marketing writing warm, trustworthy social copy for a young audience.\nT: Write an Instagram caption for the launch of our goal-based recurring deposit — save automatically toward a named goal. Visual shows a young couple planning a trip.\nF: 3 sentences max. First sentence hooks with the goal idea. End with a soft CTA. No hashtags in the caption body. No guaranteed-return claims.','RTF',''],
+    [2,'Arjun Pillai · Head of Credit','SME renegotiation prep email','Pre-meeting email before renewing a key SME borrower\'s facility.','R: Act as a Head of Credit who is a skilled, relationship-minded commercial negotiator.\nT: Write a pre-meeting email to an SME borrower ahead of annual facility renewal. Our position: renew ₹8cr working-capital limit, add a cash-flow-linked drawdown, require monthly GST-based monitoring.\nF: 3 paragraphs: relationship acknowledgement, agenda preview, our expectations. Professional, direct, not adversarial. Max 200 words.','RTF',''],
+    [3,'Vikram Menon · Retail','Apology email — service disruption','Standard response for customers hit by the salary-day app outage.','R: Act as a retail-banking CX lead who writes empathetic, RBI-compliant customer communications.\nT: Write an apology email template for customers affected by the app outage on salary day. Include: acknowledgement, apology, what we fixed, reassurance that no funds were lost, and how to reach help.\nF: Email with subject line. Under 150 words. Warm, genuine, not robotic. No compensation offer — route those to a human.','RTF',''],
+    [4,'Ritu Aggarwal · CRO','Weekly risk dashboard note','Monday KPI note for the CEO and executive committee.','R: Act as a risk manager presenting portfolio risk to a bank\'s executive committee.\nT: Write the executive summary for Meridian\'s Week 47 risk note. Retail GNPA 2.1% (up 4bps). Collection efficiency 96.8% (down 0.5pt). One fraud cluster flagged in two branches. Liquidity comfortable.\nF: 5-sentence executive summary. Bold the headline number. Flag the one issue needing an exec decision this week.','RTF',''],
+    [5,'Imran Qureshi · Compliance','Exception-request memo','A relationship manager wants to onboard a client with an incomplete address proof.','R: Act as a compliance officer reviewing a KYC exception request.\nT: Draft a memo evaluating whether onboarding a client with a deferred address proof (utility bill pending) breaches Meridian\'s KYC policy.\nF: Memo format: Request summary, Policy reference, Analysis (2 paragraphs), Determination (Approved / Denied / Approved with conditions), Required follow-ups if approved.','RTF','']
+  ],
+  'ex-r-nx':[
+    [1,'Priya Iyer · VP Delivery','Delivery pipeline update email','Weekly status note for the CTO and delivery leadership.','R: Act as a VP of Delivery at an IT services firm writing for a CTO and leadership team.\nT: Write a delivery status email. 3 accounts: BankCo (green, on track), InsureCo (amber, scope creep), RetailCo (red, SLA breach). 2 new transitions starting next week.\nF: Structured email: Headline health count, Table (Account | RAG | Issue | Next step), 2-sentence editorial comment on the week.','RTF',''],
+    [2,'Karan Malhotra · CISO','Security advisory to engineers','A critical library vulnerability was disclosed overnight.','R: Act as a CISO writing a clear, non-alarming security advisory to all engineers.\nT: Write an advisory on a critical vulnerability in a widely used logging library. Action needed: patch to the fixed version within 72 hours, do not deploy new builds using the affected version, report exposure via the security channel.\nF: Advisory with a one-line severity summary, What happened, What to do (3 numbered steps), Deadline, Who to contact. Under 180 words.','RTF',''],
+    [3,'Deepak Rao · Talent','Offer-letter cover note','Personalised note accompanying an offer to a senior lateral hire.','R: Act as a talent-acquisition lead who writes warm, professional offer communications.\nT: Write a cover note for a senior engineer\'s offer letter. Role: Principal Engineer, cloud practice. Highlight: technical-leadership track, flexible-work policy, learning budget. Ask for a decision within 7 days.\nF: 3 short paragraphs. Warm, confident, specific to the role. Max 180 words. End with a clear next step.','RTF',''],
+    [4,'Ananya Bose · Presales','RFP clarification response','Client has raised 6 clarification questions on Novantis\' bid.','R: Act as a presales lead responding to a client\'s RFP clarification questions.\nT: Draft responses to 6 client clarifications on our managed-services bid: transition timeline, ramp-up staffing, reporting cadence, penalty caps, near-shore mix, exit assistance.\nF: Q&amp;A format, each answer 2–3 sentences, confident but not over-committing. Flag any answer that needs delivery sign-off before sending.','RTF',''],
+    [5,'Rohan Gupta · CTO','All-hands talking points','Quarterly engineering all-hands for 3,800 engineers.','R: Act as a CTO preparing talking points for an engineering all-hands.\nT: Prepare talking points for the Q3 all-hands. Themes: delivery quality up, two flagship wins, AI-tooling pilot results, and an honest note on attrition and what we\'re doing about it.\nF: 6 talking points, each 2 sentences. Open with a win, address attrition directly, end with a forward commitment. Confident, candid tone.','RTF','']
+  ],
+  'ex-z-mc':[
+    [1,'Kunal Shah · Admissions','Prospectus FAQ drafting','Sahyadri needs a clean FAQ for the new-programme prospectus.','You are a higher-education admissions writer. Draft a 12-question FAQ for the B.Tech (AI &amp; Data Science) prospectus at Sahyadri University. Cover eligibility, fee and scholarships, seats and reservation, placement approach, hostel, and how to apply. Constraints: factual, no guaranteed-placement claims, every fee shown as a [PLACEHOLDER]. Format: Q&amp;A, each answer under 40 words.','Zero-Shot',''],
+    [2,'Sanjay Rao · Registrar','Audit-observation response','Sanjay must reply to a statutory-audit observation on advance adjustments.','You are a university finance controller. Draft a formal response to a statutory-audit observation that ₹1.2cr of staff travel advances remain unadjusted beyond 6 months. Include: acknowledgement, root cause, corrective action with timeline, and a preventive control. Constraints: professional, no defensiveness, cite the relevant financial rule as [RULE-REF]. Format: reference header + 4 short paragraphs.','Zero-Shot',''],
+    [3,'Dr. Meera Nair · Dean, Faculty','Course-outcome mapping','Meera needs learning-outcome mapping for NAAC/NBA documentation.','You are an academic-quality expert familiar with outcome-based education. For the course "Machine Learning (5th sem)", write 6 course outcomes and map each to programme outcomes and Bloom\'s level. Constraints: measurable action verbs only, no vague outcomes. Format: table — CO | Statement | Mapped PO(s) | Bloom level. [PASTE SYLLABUS]','Zero-Shot',''],
+    [4,'Fatima Sheikh · Exams','Malpractice-case note','Standardising the write-up for exam-malpractice cases.','You are a university examinations officer. Draft a factual case note for an exam-malpractice incident for the Unfair-Means Committee. Include: candidate and paper details as [PLACEHOLDERS], description of the incident, invigilator statement summary, material seized, and the clause allegedly violated. Constraints: strictly factual, no conclusion on guilt. Format: numbered sections. [PASTE INVIGILATOR REPORT]','Zero-Shot',''],
+    [5,'Dr. Anjali Deshpande · VC','Convocation speech outline','Anjali needs a first-draft outline for the annual convocation address.','You are a speechwriter for university leaders. Write an outline for a 12-minute convocation address by the Vice-Chancellor of Sahyadri University. Themes: graduates entering an AI-shaped workplace, lifelong learning, and responsibility to community. Constraints: warm and specific, one concrete student anecdote placeholder, no clichés about "bright futures." Format: opening hook, 3 movements with a key line each, close.','Zero-Shot','']
+  ],
+  'ex-z-vr':[
+    [1,'Arjun Pillai · Head of Credit','Credit-note structuring','Standardising first-pass credit notes for SME proposals.','You are a bank credit analyst. Review this SME loan proposal and produce a first-pass credit note. Cover: business summary, purpose and amount, financial highlights (3 years), key risks, proposed structure, and a recommendation (Recommend / Recommend with conditions / Decline). Constraints: base every statement on the data provided, mark any missing data as [DATA GAP]. Format: sectioned note, risks as a ranked list. [PASTE FINANCIALS]','Zero-Shot','Zero-shot works when the structure is well-known — a credit note has a standard shape the model has seen often.'],
+    [2,'Imran Qureshi · Compliance','Transaction-alert triage','Standardising the write-up for AML transaction alerts.','You are an AML analyst. Review this transaction-monitoring alert and write a disposition note. Include: customer and account as [PLACEHOLDERS], alert trigger, transaction pattern, plausible legitimate explanation, red flags, and a recommendation (Close / Escalate for STR review). Constraints: neutral, evidence-based, no conclusion of guilt. Format: numbered sections. [PASTE ALERT DATA]','Zero-Shot',''],
+    [3,'Vikram Menon · Retail','Branch-manager coaching plan','A branch is missing its liability-growth targets.','You are a retail-banking area head. Draft a 60-day coaching plan for a branch manager whose CASA growth is 30% below target for two quarters. Include: likely root causes, 3 focus actions, weekly check-in structure, and success metrics. Constraints: developmental not punitive, actions must fit a 12-person branch. Format: plan with a weekly checklist.','Zero-Shot',''],
+    [4,'Ritu Aggarwal · CRO','Risk-appetite statement draft','Meridian is refreshing its board risk-appetite statement.','You are a bank risk strategist. Draft a board-level risk-appetite statement covering credit, market, liquidity, operational and conduct risk. For each: a qualitative appetite sentence and 1–2 measurable limits as [PLACEHOLDERS]. Constraints: concise, board-readable, aligned to RBI expectations. Format: one paragraph of principles + a limits table.','Zero-Shot',''],
+    [5,'Neha Kulkarni · Marketing','Campaign compliance check','Neha needs a quick compliance screen on draft ad copy.','You are a financial-services marketing compliance reviewer. Review this draft campaign copy for a personal-loan offer and flag anything non-compliant: missing APR/terms, guaranteed-approval language, misleading urgency, or unclear fees. Constraints: cite the specific line, name the issue, suggest a compliant rewrite. Format: table — Line | Issue | Suggested rewrite. [PASTE COPY]','Zero-Shot','']
+  ],
+  'ex-z-nx':[
+    [1,'Priya Iyer · VP Delivery','RCA document for an outage','Standardising root-cause analysis after a production incident.','You are a delivery lead writing a blameless root-cause analysis. From this incident timeline, produce an RCA: summary, impact, timeline, root cause, contributing factors, corrective actions (with owners and dates), and prevention. Constraints: blameless language, separate root cause from symptoms, every action must have an owner. Format: standard RCA template. [PASTE INCIDENT TIMELINE]','Zero-Shot','Zero-shot is safe here because the RCA format is standard and the model has strong priors for it.'],
+    [2,'Karan Malhotra · CISO','Vendor security assessment','Screening a new SaaS vendor before approval.','You are a security analyst. Assess this third-party SaaS vendor for use with client data. Cover: data handling, certifications (SOC 2 / ISO 27001), sub-processors, data residency, breach history, and a risk rating (Low/Med/High) with conditions of use. Constraints: base findings only on the material provided, mark unknowns as [NEEDS EVIDENCE]. Format: assessment table + a one-paragraph recommendation. [PASTE VENDOR DOCS]','Zero-Shot',''],
+    [3,'Deepak Rao · Talent','JD from a skills brief','Turning a hiring-manager brief into a clean job description.','You are a technical recruiter. Turn this hiring-manager brief into a job description for a Senior Cloud Engineer. Include: role summary, responsibilities, must-have and nice-to-have skills, and what success looks like in 6 months. Constraints: no inflated buzzwords, skills must be testable, gender-neutral language. Format: standard JD. [PASTE HIRING BRIEF]','Zero-Shot',''],
+    [4,'Ananya Bose · Presales','Proposal executive summary','Drafting the exec summary for a solution proposal.','You are a presales solution lead. Write the executive summary for a proposal to modernise a client\'s order-management platform. Cover: the client\'s problem, our proposed approach, expected outcomes, why Novantis, and the engagement shape. Constraints: outcome-first, no unverified metrics, under 250 words. Format: 4 short paragraphs. [PASTE SOLUTION NOTES]','Zero-Shot',''],
+    [5,'Rohan Gupta · CTO','Tech-radar summary','Rohan wants a crisp internal tech-radar update.','You are a CTO\'s chief of staff. From these engineering notes, write a quarterly tech-radar summary classifying items as Adopt / Trial / Assess / Hold, with a one-line rationale each. Constraints: neutral, evidence-based, no hype; anything unproven goes to Assess or Hold. Format: four grouped lists. [PASTE ENGINEERING NOTES]','Zero-Shot','']
+  ],
+  'ex-f-mc':[
+    [1,'Kunal Shah · Admissions','Applicant reply templates','Standardising warm, accurate replies to common applicant queries.','Write applicant replies in Sahyadri\'s admissions voice.\n\nExample 1 — Query: "Is there a scholarship for first-generation students?"\nReply: "Yes — the Sahyadri First-Gen Scholarship covers up to 50% of tuition for eligible first-generation learners. Share your family-income declaration with your application and our team will guide you through it. You are exactly who this was built for."\n\nExample 2 — Query: "I missed the document-upload deadline by a day."\nReply: "Don\'t worry — a one-day delay won\'t cost you your seat. Upload your documents today and email admissions with your application ID so we can flag it as received on time."\n\nNow write replies to these 6 common queries: [PASTE QUERIES]','Few-Shot',''],
+    [2,'Dr. Meera Nair · Dean, Faculty','Feedback on lecture observations','Standardising constructive feedback after faculty class observations.','Write class-observation feedback in this constructive style.\n\nExample 1 — Observation: strong content, low student interaction.\nFeedback: "Your command of the material is clear and the examples were current. The next lever is participation — try one think-pair-share per session so the quieter half of the room engages. Content is already a strength; interaction is the multiplier."\n\nExample 2 — Observation: good interaction, ran 12 minutes over.\nFeedback: "The energy in the room was excellent and students were genuinely thinking. Watch the clock — build in a 5-minute buffer and a hard stop, because the last point lost impact when students started packing up."\n\nNow write feedback for these 5 observations: [PASTE NOTES]','Few-Shot',''],
+    [3,'Fatima Sheikh · Exams','Circular tone templates','Keeping exam circulars firm but clear across many notices.','Write examination circulars in this exact tone.\n\nExample 1 — Topic: revised reporting time.\nCircular: "All candidates must report to the exam hall 45 minutes before the paper. Candidates arriving after the paper begins will not be admitted. No exceptions will be entertained on the day; represent any genuine difficulty to the Controller\'s office in advance."\n\nExample 2 — Topic: prohibited items.\nCircular: "Smartwatches and mobile phones are strictly prohibited inside exam halls, whether switched on or off. Possession is treated as use of unfair means. Deposit all devices at the entry counter before entering."\n\nNow write circulars for these 5 topics: [PASTE TOPICS]','Few-Shot',''],
+    [4,'Sanjay Rao · Registrar','Grant-utilisation commentary','Quarterly commentary lines for grant-review meetings.','Write grant-utilisation commentary in this style.\n\nExample 1 — Engineering, 61% utilised (target 80%).\nCommentary: "Engineering is behind on utilisation at 61% against an 80% target. The gap is procurement, not intent — three equipment tenders are stuck in evaluation. Recommend a fast-track committee before the sanction window closes."\n\nExample 2 — Science, 92% utilised, on time.\nCommentary: "Science is the benchmark this cycle — 92% utilised, milestones met, clean documentation. Worth studying their procurement calendar as a template for the other schools."\n\nNow write commentary for these 6 grant lines: [PASTE DATA]','Few-Shot',''],
+    [5,'Dr. Anjali Deshpande · VC','Stakeholder message drafting','Consistent voice across messages to students, faculty and alumni.','Write VC messages in this warm, direct voice.\n\nExample 1 — To students, exam-season:\n"This is a demanding fortnight, and I want you to know the whole university is behind you. Sleep, eat, and ask for help early — reaching out is a sign of strength, not weakness. Do your best; your worth is not a mark sheet."\n\nExample 2 — To faculty, after a strong NAAC visit:\n"Thank you. The peer team saw what I see every day — people who care about students beyond the syllabus. The grade matters, but the culture you\'ve built matters more, and that is not something a committee can award."\n\nNow write messages for these 5 occasions: [PASTE OCCASIONS]','Few-Shot','']
+  ],
+  'ex-f-vr':[
+    [1,'Vikram Menon · Retail','Customer recovery messages','Recovery messages that feel personal, not templated.','Write customer recovery messages in Meridian\'s voice.\n\nExample 1 — Failed transaction, first complaint:\n"Hi [Name], your payment failed but the amount was debited — that\'s stressful and it\'s on us to fix. The reversal is already initiated and will reflect within 24 hours. You don\'t need to do anything; we\'ll message you the moment it\'s done."\n\nExample 2 — Long branch wait, loyal customer:\n"Hi [Name], twenty years with Meridian and a 40-minute wait is not the experience you\'ve earned. Thank you for your patience today. I\'ve shared this with the branch head personally, and your next visit will be handled on priority."\n\nNow write recovery messages for these 5 scenarios: [PASTE SCENARIOS]','Few-Shot',''],
+    [2,'Arjun Pillai · Head of Credit','Credit-decision rationale lines','Standardising the rationale line on credit decisions.','Write credit-decision rationale lines in this format.\n\nExample 1 — Approved, strong SME:\n"Approved. Three years of rising revenue, clean GST trail, and a 1.6x DSCR support the facility. The single watch-item is customer concentration (48% from one buyer) — mitigated by monthly receivable monitoring."\n\nExample 2 — Declined, thin file:\n"Declined at this stage. The business fundamentals are promising, but two years of filings and an unaudited current year fall short of our SME threshold. Invite to reapply after audited FY-close with 12 months of banking."\n\nNow write rationale lines for these 8 cases: [PASTE CASE DATA]','Few-Shot',''],
+    [3,'Imran Qureshi · Compliance','Training scenario writing','Realistic scenarios for the annual compliance workshop.','Write compliance training scenarios in this format.\n\nExample 1:\nScenario: A relationship manager is offered a "processing fee" in cash by a customer to expedite a loan file.\nQuestion: What should the RM do?\nAnswer: Refuse the offer. Report it to the compliance officer the same day. Document the interaction. Do not process the file under any pressure or timeline promise.\n\nExample 2:\nScenario: A staff member receives a customer\'s OTP over the phone to "help complete" a transaction.\nQuestion: Is this acceptable?\nAnswer: No. Staff must never collect a customer OTP or credential. Politely decline, guide the customer to complete it themselves, and report the request as a potential social-engineering attempt.\n\nNow create 20 scenarios covering: bribery, mis-selling, data privacy, and insider information. [PASTE TOPIC LIST]','Few-Shot',''],
+    [4,'Ritu Aggarwal · CRO','Portfolio-review comments','Monthly commentary on portfolio-segment performance.','Write portfolio-review comments in this style.\n\nExample 1 — Home loans, GNPA 0.8%, steady.\nComment: "Home loans remain the anchor of book quality — GNPA 0.8%, low prepayment, stable vintages. No action needed beyond maintaining current underwriting discipline."\n\nExample 2 — Personal loans, GNPA 2.4% rising.\nComment: "Personal loans need a closer look — GNPA has risen 30bps for two straight months, concentrated in the sub-700 bureau band. Recommend tightening the score cut-off and reviewing the two channels driving the deterioration."\n\nNow write comments for these 6 segments: [PASTE SEGMENT DATA]','Few-Shot',''],
+    [5,'Neha Kulkarni · Marketing','Product one-liners','Consistent, compliant one-liners for product cards.','Write product one-liners in Meridian\'s voice.\n\nExample 1 — Recurring deposit:\n"Save a little every month, automatically, toward a goal you name. No lump sum, no pressure — just a steady habit that adds up."\n\nExample 2 — Salary account:\n"Your salary, working harder — zero-balance, instant UPI, and rewards that fit real life. Switch in minutes, not visits."\n\nRules: One benefit, plain language, no jargon, no return or approval guarantees. Under 30 words.\n\nNow write one-liners for these 6 products: [PASTE PRODUCTS]','Few-Shot','']
+  ],
+  'ex-f-nx':[
+    [1,'Ananya Bose · Presales','Case-study blurbs','Consistent, outcome-first client case-study blurbs.','Write Novantis case-study blurbs matching our voice.\n\nExample 1 — Payments client, fraud revamp:\n"We cut false-positive fraud alerts by 41% for a top-5 payments client — freeing 30 analyst-hours a week and clearing genuine transactions in real time. Nine months, one re-architected pipeline, zero downtime."\n\nExample 2 — Retailer, order modernisation:\n"A national retailer\'s order system buckled every festival season. We replaced it with an event-driven platform that held through a 5x Diwali peak — and shipped 22% faster the rest of the year."\n\nRules: Lead with the outcome and a number. One sentence on how. No "leverage," "synergy," or "cutting-edge." Under 55 words.\n\nNow write blurbs for these 5 projects: [PASTE PROJECT DATA]','Few-Shot',''],
+    [2,'Priya Iyer · VP Delivery','Status-report narratives','Standardising the narrative on weekly account reports.','Write account status narratives in this format.\n\nExample 1 — BankCo, green:\n"BankCo stays green. All SLAs met, the release shipped a day early, and the sponsor called out the reporting quality. Watch-item: two senior engineers roll off next month — backfills are identified and shadowing has begun."\n\nExample 2 — InsureCo, amber:\n"InsureCo is amber this week, and it\'s a scope story, not a quality one. Three unplanned change requests are stretching the team. We\'ve logged them, quantified the effort, and a re-prioritisation call with the client is set for Thursday."\n\nNow write narratives for these 6 accounts: [PASTE RAG DATA]','Few-Shot',''],
+    [3,'Deepak Rao · Talent','Interview-feedback templates','Consistent, evidence-based interview feedback.','Write interview feedback in this format.\n\nExample 1 — Backend candidate, strong:\n"Strong hire for Senior Backend. Designed a clean, scalable API under time pressure and reasoned aloud about trade-offs. Gap: limited exposure to event-driven systems — coachable given the fundamentals. Recommend: Hire."\n\nExample 2 — Frontend candidate, mixed:\n"Borderline for Senior Frontend. Excellent CSS and accessibility instincts, but struggled to justify state-management choices and was vague on testing. Recommend: down-level to mid, or a second round focused on architecture."\n\nNow write feedback for these 6 candidates: [PASTE INTERVIEW NOTES]','Few-Shot',''],
+    [4,'Karan Malhotra · CISO','Risk-acceptance notes','Standardising security risk-acceptance write-ups.','Write security risk-acceptance notes in this format.\n\nExample 1 — Legacy TLS on an internal tool:\n"Risk: an internal-only tool still uses an outdated TLS version. Likelihood low (not internet-facing), impact medium. Accepted for 90 days with compensating controls (network isolation, access logging). Owner: platform team. Review date set."\n\nExample 2 — Delayed patch on a test box:\n"Risk: a non-production test server is one cycle behind on patches. Likelihood low, impact low. Accepted for 30 days; box is firewalled from client data. Not acceptable beyond the window — auto-escalates if unpatched."\n\nNow write risk-acceptance notes for these 5 items: [PASTE RISK ITEMS]','Few-Shot',''],
+    [5,'Rohan Gupta · CTO','Engineering-decision records','Standardising architecture decision records (ADRs).','Write architecture decision records in this format.\n\nExample 1 — Message queue choice:\n"Decision: adopt a managed message queue over self-hosted. Context: two teams need async processing; ops bandwidth is thin. Consequence: faster delivery and less ops load, at a higher per-message cost and some vendor lock-in — accepted, with an abstraction layer to limit exposure."\n\nExample 2 — Monorepo vs polyrepo:\n"Decision: keep services in a monorepo for now. Context: 6 services, one team, frequent cross-cutting changes. Consequence: simpler refactors and shared tooling today; revisit if the team splits or build times exceed 15 minutes."\n\nNow write ADRs for these 5 decisions: [PASTE DECISIONS]','Few-Shot','']
+  ],
+  'ex-cot-all':[
+    [1,'Sanjay Rao · Sahyadri Registrar','Build vs buy — student ERP module','Sahyadri must decide whether to build a custom fee-and-scholarship module or buy a SaaS product.','You are a higher-education IT strategist. Before giving a recommendation, think through this build vs. buy decision step by step:\n\nStep 1: Define functional requirements for the fee-and-scholarship module.\nStep 2: Evaluate the build option — cost, timeline, maintenance, internal capability.\nStep 3: Evaluate the buy option — 3 vendors, fit with our existing ERP, licensing cost.\nStep 4: Assess strategic risk — what if student numbers grow 50% in 3 years, or fee rules change?\nStep 5: Consider hidden costs on both sides (integration, data migration, training).\n\nContext: 28,000 students, complex scholarship and reservation rules, existing ERP lacks flexible fee logic. Build estimate: ₹1.1cr over 14 months. Top SaaS option: ₹35 lakh/year.\n\nAfter all steps, deliver a clear Build / Buy / Hybrid recommendation with your top 3 reasons.','Chain-of-Thought','Step-by-step reasoning stops the model from defaulting to a superficial cost comparison.'],
+    [2,'Ritu Aggarwal · Meridian CRO','Collections in-house or outsource?','₹5 crore to allocate between building an in-house collections unit or expanding agency partnerships.','You are a bank risk and operations strategist. Think through this capital-allocation decision step by step.\n\nStep 1: Clarify what each option delivers (in-house control vs. agency scale).\nStep 2: Assess conduct and reputation risk — which model better controls recovery practices?\nStep 3: Evaluate cost-to-collect and effectiveness at current delinquency levels.\nStep 4: Consider compliance — RBI recovery-agent norms and customer-grievance exposure.\nStep 5: Model the 24-month economics of each path.\n\nBudget: ₹5cr. Timeline: results needed within 18 months. Current: 70% outsourced, rising complaints on agency conduct.\n\nAfter all 5 steps, recommend how to allocate the ₹5cr with a clear rationale.','Chain-of-Thought',''],
+    [3,'Rohan Gupta · Novantis CTO','Bench strategy in a soft quarter','Utilisation dropped to 74% — should Novantis reskill the bench, reduce it, or invest in a new practice?','You are a technology services strategist. Before recommending, reason through this systematically:\n\nStep 1: Diagnose why utilisation fell (demand dip, skill mismatch, or pipeline timing).\nStep 2: Evaluate the reskilling option — which skills, how long, expected redeployment rate.\nStep 3: Assess the reduction option — cost saved vs. capability lost and rehiring risk later.\nStep 4: Evaluate the new-practice bet — is there a real, funded demand signal?\nStep 5: Consider morale, employer brand, and what competitors are doing.\n\nContext: 74% utilisation, 300 engineers on bench, strong AI-engineering pipeline forming, hiring market tight.\n\nAfter all steps: Reskill / Reduce / Invest in new practice + top 3 reasons + the one assumption that would change your mind.','Chain-of-Thought',''],
+    [4,'Arjun Pillai · Meridian Credit','Enter a new lending segment?','Meridian is considering entering used-commercial-vehicle financing.','You are a credit strategy head. Think through this new-segment decision step by step.\n\nStep 1: Quantify the opportunity — market size, yields, and competitive intensity.\nStep 2: Assess the risk profile — loss rates, collateral behaviour, seasonality of the segment.\nStep 3: Evaluate capability — do we have the underwriting, valuation and collections skills?\nStep 4: Consider build vs. partner (co-lending with an NBFC that knows the segment).\nStep 5: Model the break-even and the downside in a stress scenario.\n\nContext: attractive yields but higher loss volatility; we lack in-house asset-valuation expertise; two NBFCs open to co-lending.\n\nRecommend: enter directly / co-lend / do not enter. Include top 3 reasons and the key assumption that most affects the decision.','Chain-of-Thought',''],
+    [5,'Priya Iyer · Novantis Delivery','Replace or coach an account lead?','A key account\'s delivery lead is underperforming — coach or replace, 9 months into a 3-year deal?','You are a delivery-org leader experienced in leadership assessment. Before recommending, think step by step:\n\nStep 1: Define what "underperforming" means here — skill gap, will gap, or context mismatch?\nStep 2: Assess what the lead has done well — what would be lost by replacing?\nStep 3: Evaluate urgency — how long before the client relationship is structurally damaged?\nStep 4: Assess the bench — how fast can we place a credible replacement without disruption?\nStep 5: Consider team impact — what happens to 40 people if the lead changes mid-programme?\n\nContext: strong engineer, weak client-facing communication; sponsor trust slipping; two SLA misses; team loyal to the lead.\n\nAfter all steps: Coach / Replace / Add a client-facing co-lead + top 3 reasons + earliest decision checkpoint.','Chain-of-Thought','']
+  ]
+};
+
+window.exDocs={
+  "ex-c-mc_1":"the last 2 years of faculty exit-interview data, the department-wise attrition sheet, the current UGC pay-grade structure, and the competitor’s recruitment ad",
+  "ex-c-mc_2":"the grant sanction letters with expiry dates, the school-wise utilisation ledger, and the pending purchase-order / tender status list",
+  "ex-c-mc_3":"the anonymised student-grievance and peer-complaint records, the applicable service rules, and the prior appraisal file",
+  "ex-c-mc_4":"last year’s admissions-funnel data, the AICTE-approved intake and fee sheet, and the school-counsellor contact list",
+  "ex-c-mc_5":"the examination ordinance, the hall-capacity and seating norms, the invigilator roster, and a campus map with inter-campus distances",
+  "ex-c-vr_1":"the vintage / delinquency curves for the last 4 quarters, the current underwriting cut-offs, and the board risk-appetite limits",
+  "ex-c-vr_2":"the current SME credit policy, the stage-wise TAT breakdown, and sample bureau / GST / bank-statement data feeds",
+  "ex-c-vr_3":"the existing 2021 policy, the relevant RBI KYC Master Direction, and the last inspection’s observations",
+  "ex-c-vr_4":"the branch-wise deposit / transaction / rent P&L, the digital-adoption rates, and the priority-sector / unbanked location map",
+  "ex-c-vr_5":"the segment-wise app-usage data, the drop-off funnel, and branch-assist capacity by region",
+  "ex-c-nx_1":"the pilot productivity metrics, per-seat licence quotes, and the client MSA clauses on IP and data-residency",
+  "ex-c-nx_2":"the SLA-breach history, the CSAT / NPS trend, the attrition data, and the last 3 steering-committee decks",
+  "ex-c-nx_3":"the security-incident log, the client MSAs’ data clauses, and the current ISO 27001 control set",
+  "ex-c-nx_4":"the current funnel metrics (time-to-hire, offer-decline), the role skill-matrices, and interviewer-load data",
+  "ex-c-nx_5":"the RFP document, the incumbent’s known pain points, and Novantis’ relevant case studies and rate card",
+  "ex-r-mc_1":"the October management accounts and the budget-vs-actual sheet",
+  "ex-r-mc_2":"the approved job specification, the UGC pay band, and the department’s research priorities",
+  "ex-r-mc_3":"the scholarship-deadline calendar and the open-day schedule",
+  "ex-r-mc_4":"the pass-rate and placement dashboards and the NAAC action-tracker",
+  "ex-r-mc_5":"the exam-schedule status, the invigilation roster, and the open malpractice-case list",
+  "ex-r-vr_1":"the product one-pager, the approved marketing-claims list, and the brand-voice guide",
+  "ex-r-vr_2":"the borrower’s account history, the current facility terms, and the proposed revised terms",
+  "ex-r-vr_3":"the incident timeline, the confirmed impact scope, and the compliance-approved messaging do’s and don’ts",
+  "ex-r-vr_4":"the week’s GNPA / collection-efficiency numbers and the flagged-branch fraud alert",
+  "ex-r-vr_5":"the KYC policy, the customer file, and the specific exception being requested",
+  "ex-r-nx_1":"the account RAG tracker and the transition schedule",
+  "ex-r-nx_2":"the vulnerability advisory (CVE), the affected-systems inventory, and the patch timeline",
+  "ex-r-nx_3":"the approved offer terms, the role description, and the benefits summary",
+  "ex-r-nx_4":"the client’s clarification questions and the bid’s solution and pricing notes",
+  "ex-r-nx_5":"the quarter’s delivery metrics, the two win summaries, and the attrition data",
+  "ex-z-mc_1":"the approved programme fact sheet (eligibility, fee, seats, reservation)",
+  "ex-z-mc_2":"the audit-observation memo and the relevant financial rule",
+  "ex-z-mc_3":"the course syllabus and the programme-outcome list",
+  "ex-z-mc_4":"the invigilator report, the seizure record, and the unfair-means clause",
+  "ex-z-mc_5":"the year’s achievement highlights and one real student story (used with consent)",
+  "ex-z-vr_1":"the borrower’s 3-year financials, bank statements, and bureau report",
+  "ex-z-vr_2":"the alert detail, the customer’s transaction history, and the KYC profile",
+  "ex-z-vr_3":"the branch’s CASA-growth trend vs target and the staffing sheet",
+  "ex-z-vr_4":"the current limits framework and the regulator’s expectations note",
+  "ex-z-vr_5":"the draft ad copy and the product’s approved terms (APR, fees)",
+  "ex-z-nx_1":"the incident timeline, the monitoring / log excerpts, and the change record",
+  "ex-z-nx_2":"the vendor’s security docs (SOC 2 / ISO 27001), the sub-processor list, and the DPA",
+  "ex-z-nx_3":"the hiring-manager brief and the team’s skill matrix",
+  "ex-z-nx_4":"the solution notes, the client problem statement, and the outcome targets",
+  "ex-z-nx_5":"the engineering evaluation notes and the current tooling inventory",
+  "ex-f-mc_1":"2–3 gold-standard past replies and the admissions-policy FAQ",
+  "ex-f-mc_2":"the observation rubric and 1–2 samples of well-written feedback",
+  "ex-f-mc_3":"2 approved past circulars in the desired tone and the exam rules",
+  "ex-f-mc_4":"2 example commentary lines and the current utilisation figures",
+  "ex-f-mc_5":"2–3 of the VC’s past messages in the desired voice",
+  "ex-f-vr_1":"2 exemplar recovery messages and the customer’s case history",
+  "ex-f-vr_2":"2 sample rationale lines (one approve, one decline) and the case data",
+  "ex-f-vr_3":"2 example scenarios and the compliance-policy topic list",
+  "ex-f-vr_4":"2 example comment styles and the segment-performance data",
+  "ex-f-vr_5":"2 on-brand one-liners and the approved product claims",
+  "ex-f-nx_1":"2 approved case-study blurbs and the project outcome data",
+  "ex-f-nx_2":"2 example narratives and the account RAG data",
+  "ex-f-nx_3":"2 sample feedbacks and the role rubric / scorecard",
+  "ex-f-nx_4":"2 example notes and the current risk-register entries",
+  "ex-f-nx_5":"2 past ADRs and the decision context and options",
+  "ex-cot-all_1":"the functional-requirements list, the build estimate, and the 3 vendor quotes",
+  "ex-cot-all_2":"the current cost-to-collect data, the complaint records, and RBI recovery-agent norms",
+  "ex-cot-all_3":"the utilisation and bench data, the demand pipeline, and reskilling-cost estimates",
+  "ex-cot-all_4":"the segment market data, loss-rate benchmarks, and the co-lending term sheet",
+  "ex-cot-all_5":"the performance data, the client-feedback record, and the internal bench options",
+};
+Object.entries(examples).forEach(([cid,exs])=>{exs.forEach(ex=>mkEx(...ex,cid));});
+
+
+/* ---------- Prompt Evaluation tool · 5 dimensions (heuristic scorer) ---------- */
+(function(){
+  var EVT=document.getElementById("evText");
+  if(!EVT) return;
+  var meta=[
+    {key:"clarity",name:"Clarity",q:"Same output for two readers?",
+     fix:"Give it a verb and a boundary \u2014 \u201cAnalyse\u2026\u201d, not \u201chelp me with\u2026\u201d. If two tasks are hiding in there, split them.",
+     reasons:["No clear instruction \u2014 this reads as a topic, not a task.","A task is implied, but the verb or the scope is fuzzy.","Clear action and scope \u2014 two readers would broadly agree on what to produce."]},
+    {key:"specificity",name:"Specificity",q:"Real numbers and named roles?",
+     fix:"Add one real number and one named entity. \u201cA CFO\u201d becomes \u201ca CFO specialising in hospital cost accounting\u201d; \u201cover budget\u201d becomes \u201c$4.2M over a $38M budget\u201d.",
+     reasons:["Generic \u2014 no real numbers or named, expert role to anchor the answer.","Some detail, but the key figures or a named role are missing.","Concrete \u2014 real numbers and a named, expert role are present."]},
+    {key:"constraints",name:"Constraint quality",q:"Hard limits, or soft preferences?",
+     fix:"Turn every soft limit into a number (\u201cbrief\u201d \u2192 \u201cunder 300 words\u201d) and add one hard exclusion (\u201cdo not recommend anything needing new capital\u201d).",
+     reasons:["No boundaries \u2014 the model can wander anywhere.","Soft preferences only, or limits without an explicit exclusion.","Hard numeric limits and at least one binary exclusion."]},
+    {key:"output",name:"Output definition",q:"What artefact, in what shape?",
+     fix:"Name the sections or columns, give a length as a number, and say who reads it \u2014 audience changes vocabulary and depth more than any tone word.",
+     reasons:["No format specified \u2014 the model picks the artefact for you.","A format is named, but structure, length or audience is missing.","Format, structure, length and/or audience are defined."]},
+    {key:"context",name:"Context sufficiency",q:"Enough to answer without inventing?",
+     fix:"Supply the material. Then re-read asking: is there any fact it would have to make up? If so, add it \u2014 or say \u201cflag any assumption you make about X\u201d.",
+     reasons:["Little to work with \u2014 it must invent most of the facts.","Some background, but not enough for a tailored answer.","Rich context \u2014 the material and the situation are supplied."]}
+  ];
+  function clamp(n){return Math.max(0,Math.min(4,n));}
+  function analyse(raw){
+    var t=(raw||"").trim(), low=t.toLowerCase();
+    var words=t.split(/\s+/).filter(Boolean), wc=words.length;
+    var nums=(t.match(/\d+/g)||[]).length;
+    var verb=/\b(analy[sz]e|write|draft|create|design|summari[sz]e|list|compare|evaluate|review|assess|build|develop|generate|explain|outline|rewrite|translate|classify|extract|plan|recommend|calculate|produce|prepare|identify|rank|score|critique|propose|map|diagnose|structure)\b/;
+    var vagueOpen=/\b(help me|help with|can you|could you|tell me about|talk about|something about|i need help|assist me|give me some|thoughts on|what about)\b/;
+    var hasVerb=verb.test(low);
+    var verbEarly=verb.test(words.slice(0,8).join(" ").toLowerCase());
+    var joins=(low.match(/\b(and then|and also|,\s*and)\b/g)||[]).length;
+    // Clarity
+    var c=0; if(wc>=3)c=1; if(hasVerb)c+=2; if(hasVerb&&verbEarly)c+=1;
+    if(vagueOpen.test(low))c-=1; if(!hasVerb)c=Math.min(c,1);
+    if(hasVerb&&joins>=2&&wc<45)c=Math.min(c,3);
+    c=clamp(c);
+    // Specificity
+    var role=/\b(you are|act as|as an? |role:)\b/.test(low);
+    var expertise=/\b(expert|experienced|specialis|specializ|\d+\s*years?|senior|principal|head of|director|officer|controller|dean|registrar|manager|lead|ciso|cfo|ceo|cto)\b/.test(low);
+    var units=/(%|\$|\u20b9|\u00a3|\u20ac|\bwords?\b|\bpages?\b|\bbps\b|\bcrore\b|\blakh\b|\bdays?\b|\bmonths?\b|\bweeks?\b|\bq[1-4]\b)/.test(low);
+    var vague=(low.match(/\b(some|several|many|significant|recently|various|a lot|our team|stuff|things|good|better|nice|appropriate|relevant|as needed|etc|improve|enhance)\b/g)||[]).length;
+    var s=0; if(nums>=1)s++; if(nums>=3)s++; if(role)s++; if(expertise)s++; if(units)s++;
+    s-=Math.min(2,Math.floor(vague/2)); if(nums===0&&!role)s=Math.min(s,1); s=clamp(s);
+    // Constraint quality
+    var hardLimit=/\b(under|no more than|at most|max(imum)?|within|limit(ed)? to|exactly|between|up to|no fewer|\u2264)\b[^.]{0,24}\d|\b\d+\s*(words?|pages?|bullets?|sentences?|items?|rows?|points?|slides?|minutes?)\b/.test(low);
+    var excl=/\b(do not|don't|do n't|never|exclude|excluding|avoid|without|must not|only|no capital|no options)\b/.test(low);
+    var rules=/\b(policy|regulation|complian|standard|per the|must comply|gdpr|hipaa|\brbi\b|\bugc\b|aicte|naac|soc 2|iso |sec |fatf|pmla)\b/.test(low);
+    var soft=/\b(brief|concise|short|realistic|reasonable|keep it|simple|professional tone|clear|to the point)\b/.test(low);
+    var k=0; if(hardLimit)k+=2; if(excl)k+=1; if(rules)k+=1; if(k===0&&soft)k=1; k=clamp(k);
+    // Output definition
+    var fmt=/\b(table|list|bullet|memo|email|letter|json|csv|slide|deck|summary|report|checklist|paragraph|outline|matrix|template|plan|agenda|rubric|dashboard|one-pager|headline|column|section|rows?|flowchart)\b/.test(low);
+    var struct=/\b(section|column|steps?|heading|format:|structure|numbered|table with|each with|per row|fields?|\|)\b/.test(low);
+    var length=/\b\d+\s*(word|page|sentence|bullet|slide|row|point|item|paragraph|line)|\b(max|under|no more than|up to)\s*\d+/.test(low);
+    var aud=/\b(audience|for the (board|cfo|ceo|client|cio|team|room|committee)|reading level|7th-grade|non-technical|executive|for parents|for students|for a )\b/.test(low);
+    var o=0; if(fmt)o++; if(struct)o++; if(length)o++; if(aud)o++; if(!fmt&&!struct)o=Math.min(o,1); o=clamp(o);
+    // Context sufficiency
+    var supplied=(/\b(context:|background:|given|here is|here's|here 's|attached|the data|figures?:|current:|situation:|data:)\b/.test(low)||/\[(paste|data|attach)/.test(low)||nums>=2);
+    var gap=/\b(flag (any )?assumption|if you (don't|do not|do n't) have|note any assumption|state your assumptions|i don't have|we lack|unknown|mark any gap|flag any gap)\b/.test(low);
+    var x=0; if(supplied)x+=2; if(nums>=3)x+=1; if(gap)x+=1; if(wc>=45&&nums>=1)x+=1;
+    if(wc<8&&nums===0)x=0; x=clamp(x);
+    return {clarity:c,specificity:s,constraints:k,output:o,context:x,wc:wc};
+  }
+  function barColor(v){return v<=1?"#b3261e":(v===2?"#8A6A00":"#2d5a1e");}
+  function bucket(v){return v<=1?0:(v===2?1:2);}
+  function gradeFor(tot){
+    if(tot>=17)return["Send it","#2d5a1e","Design quality is high. If the output still disappoints, the problem is likely the task itself, or the material you attached \u2014 not the prompt."];
+    if(tot>=13)return["Revise first","#8A6A00","Usable for low-stakes work. Fix the weakest dimension before you put this in front of a partner or a client."];
+    if(tot>=8) return["Significant gaps","#b3261e","This will produce something plausible and generic, and you\u2019ll spend several rounds pulling it toward what you actually wanted."];
+    return["Redesign","#b3261e","At this level the model is making almost every decision for you. Rewrite it against RTF or CREATE rather than patching it."];
+  }
+  function render(){
+    var res=document.getElementById("evResult");
+    if(!EVT.value.trim()){res.classList.remove("show");return;}
+    var a=analyse(EVT.value);
+    var order=["clarity","specificity","constraints","output","context"];
+    var tot=order.reduce(function(s,k){return s+a[k];},0);
+    document.getElementById("evTotal").textContent=tot;
+    var g=gradeFor(tot);
+    var gd=document.getElementById("evGrade");
+    gd.textContent=g[0]; gd.style.background=g[1];
+    document.getElementById("evDims").innerHTML=meta.map(function(m){
+      var v=a[m.key], col=barColor(v);
+      return '<div class="ev-dim"><div><div class="ev-dim-name">'+m.name+
+        '</div><span class="ev-dim-q">'+m.q+'</span></div>'+
+        '<div class="ev-bar"><div class="ev-fill" style="width:'+(v/4*100)+'%;background:'+col+'"></div></div>'+
+        '<div class="ev-sc" style="color:'+col+'">'+v+' / 4</div>'+
+        '<div class="ev-reason">'+m.reasons[bucket(v)]+'</div></div>';
+    }).join("");
+    var sorted=order.slice().sort(function(p,q){return a[p]-a[q];});
+    var lowKey=sorted[0], secondKey=sorted[1];
+    var low=meta.filter(function(m){return m.key===lowKey;})[0];
+    var second=meta.filter(function(m){return m.key===secondKey;})[0];
+    var html="<p>"+g[2]+"</p>";
+    if(tot<20){
+      html+="<p><b>Fix this first \u2014 "+low.name+" ("+a[lowKey]+"/4).</b> "+low.fix+"</p>";
+      if(a[secondKey]<=2) html+="<p><b>Then "+second.name+" ("+a[secondKey]+"/4).</b> "+second.fix+"</p>";
+    } else {
+      html+="<p><b>All five dimensions are covered.</b> This is a well-designed prompt \u2014 send it, and judge the result knowing the briefing was not the weak link.</p>";
+    }
+    document.getElementById("evDiag").innerHTML=html;
+    res.classList.add("show");
+  }
+  var WEAK="Help me write something to improve things for our students.";
+  var STRONG="You are an academic-affairs dean with 15 years' experience in student retention. Design a first-year dropout-reduction plan for a 4-campus university. Context: 3,000 first-years, dropout 15%; drivers \u2014 financial 40%, academic 30%, belonging 20%. Constraints: deliver within 2 terms; no fee waivers beyond the existing scholarship budget; must work on all 4 campuses; do not propose anything needing Board approval without flagging it. Output: a prioritised plan for the Board of Management \u2014 3 quick wins (30 days), 3 medium (one term), 1 structural change \u2014 each with an owner and a metric, under 400 words. Rate confidence per action and flag any assumption.";
+  document.getElementById("evScoreBtn").addEventListener("click",render);
+  EVT.addEventListener("input",function(){ if(document.getElementById("evResult").classList.contains("show")) render(); });
+  document.getElementById("evSampleWeak").addEventListener("click",function(){ EVT.value=WEAK; render(); });
+  document.getElementById("evSampleStrong").addEventListener("click",function(){ EVT.value=STRONG; render(); });
+  document.getElementById("evReset").addEventListener("click",function(){ EVT.value=""; document.getElementById("evResult").classList.remove("show"); EVT.focus(); });
+})();
+</script>
+</body>
+</html>
